@@ -21,6 +21,7 @@ app/dashboard/                # Protected route — requires authentication
 app/sign-in/[[...sign-in]]/   # Clerk sign-in UI (catch-all, required for multi-step flow)
 app/sign-up/[[...sign-up]]/   # Clerk sign-up UI (catch-all, required for multi-step flow)
 components/ui/                # shadcn/ui components — add via `npx shadcn add <component>`
+data/                         # Server-side data fetching functions (Drizzle queries)
 db/                           # Database client (drizzle.ts) and schema files
 lib/                          # Shared utilities (utils.ts, etc.)
 migrations/                   # Drizzle migration output (auto-generated, do not edit)
@@ -66,6 +67,7 @@ Note: `NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL` / `AFTER_SIGN_UP_URL` are deprecated
 - **Drizzle schema** — define tables in `db/schema.ts`. Run `npx drizzle-kit generate` after any schema change; never edit `migrations/` by hand.
 - **shadcn components** — install via CLI (`npx shadcn add`), not manually. Components live in `components/ui/`.
 - **Database client** — import `db` from `db/drizzle.ts`. Do not create additional Drizzle instances.
+- **Data fetching** — all database query functions live in `/data`. See [.github/instructions/data-fetching.instructions.md](.github/instructions/data-fetching.instructions.md) for full rules: server-side only, auth validation before queries, Drizzle ORM exclusively.
 
 ## Domain Rules
 
@@ -90,3 +92,4 @@ The `docs/` folder in the project root contains reference files and guides for t
 
 - [docs/auth.md](docs/auth.md) — Clerk v7 auth conventions: middleware route protection, sign-in/sign-up pages, conditional UI, and anti-patterns
 - [docs/ui-conventions.md](docs/ui-conventions.md) — UI rules: shadcn/ui + Tailwind CSS only, full color-token reference (light & dark), button variants, responsive patterns, and prohibited dependencies
+- [.github/instructions/data-fetching.instructions.md](.github/instructions/data-fetching.instructions.md) — data fetching strategy: `/data` directory convention, server-side only, Drizzle ORM, auth validation before queries, best practices

@@ -1,0 +1,11 @@
+{
+  "servers": {
+    "neon": {
+      "command": "npx",
+      "args": ["-y", "@neondatabase/mcp-server-neon", "start"],
+      "env": {
+        "NEON_API_KEY": "${NEON_PRIVATE_API_KEY}"
+      }
+    }
+  }
+}
