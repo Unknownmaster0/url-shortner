@@ -22,6 +22,7 @@ export const clicks = pgTable(
     urlId: integer("url_id")
       .notNull()
       .references(() => urls.id, { onDelete: "cascade" }),
+    ipAddress: varchar("ip_address", { length: 45 }),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   },
   (table) => ({

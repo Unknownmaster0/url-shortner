@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# URL Shortener
+
+A production-grade URL shortener built with Next.js 16 (App Router), Clerk authentication, Drizzle ORM, and Neon serverless PostgreSQL. Short links are 7-character alphanumeric codes with real-time click analytics.
+
+## Features
+
+- **Shorten URLs** — generate 7-character short codes with collision retries
+- **Dashboard** — view, copy, and delete all your short links with live click counts
+- **Click analytics** — `/analytics` overview of every shortcode; `/analytics/[shortCode]` detail page with stat cards (total, today, this week, first/last click, avg daily) and a time-of-day pie chart
+- **Auth** — Clerk v7 sign-in / sign-up with protected routes via middleware
+- **Dark mode** — system-aware theme via `next-themes`
+
+## Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 16 (App Router) |
+| Language | TypeScript 5 |
+| Styling | Tailwind CSS v4 + shadcn/ui |
+| Icons | lucide-react |
+| Charts | shadcn chart (recharts) |
+| Auth | Clerk `@clerk/nextjs` v7 |
+| ORM | Drizzle ORM + drizzle-kit |
+| Database | Neon serverless PostgreSQL |
 
 ## Getting Started
 
-First, run the development server:
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Configure environment variables
+
+Copy `.env.example` to `.env` and fill in the values:
+
+```env
+DATABASE_URL=                              # Neon connection string
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_SIGN_IN_FORCE_REDIRECT_URL=/dashboard
+NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL=/dashboard
+```
+
+### 3. Run database migrations
+
+```bash
+npx drizzle-kit migrate
+```
+
+### 4. Start the dev server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Available Commands
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev       # Start development server
+npm run build     # Production build
+npm run lint      # ESLint
+npx drizzle-kit generate   # Generate migrations from schema changes
+npx drizzle-kit migrate    # Apply pending migrations
+npx drizzle-kit studio     # Open Drizzle Studio (DB GUI)
+```
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+app/
+  page.tsx                    # Landing page
+  layout.tsx                  # Root layout — Clerk, theme, nav
+  dashboard/                  # Protected — manage short links
+  analytics/                  # Protected — click analytics overview
+  analytics/[shortCode]/      # Protected — analytics detail for one shortcode
+  sign-in/[[...sign-in]]/     # Clerk sign-in
+  sign-up/[[...sign-up]]/     # Clerk sign-up
+  [shortCode]/route.ts        # Public HTTP 302 redirect handler
+  api/urls/route.ts           # GET list / POST create
+  api/urls/[shortCode]/route.ts  # DELETE
+components/
+  time-of-day-chart.tsx       # Client component — recharts pie chart
+  ui/                         # shadcn/ui components
+data/
+  urls.ts                     # Repository: URL queries
+  clicks.ts                   # Repository: click tracking + analytics queries
+db/
+  schema.ts                   # Drizzle table definitions (urls + clicks)
+  drizzle.ts                  # Single db client instance
+lib/
+  services/url.service.ts     # Business logic (create, delete, resolve)
+  errors/                     # AppError class + handleRouteError()
+  schemas/url.schema.ts       # Zod validation schemas
+  response.ts                 # ok() / fail() API response factories
+proxy.ts                      # Clerk middleware — route protection
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Domain Rules
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Short codes are exactly **7 alphanumeric characters** (a-z, 0-9).
+- Redirects use **HTTP 302** with `Cache-Control: no-store` — ensures every click hits the server for accurate tracking.
+- Each redirect fires a click event insert (fire-and-forget, does not block the redirect).
+- Short code collisions trigger a regeneration up to **5 attempts** before failing.
+- All user-scoped queries enforce a `WHERE userId = ?` filter in the repository layer.

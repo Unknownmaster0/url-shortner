@@ -18,14 +18,17 @@
 ```
 app/                          # Next.js App Router pages and layouts
 app/dashboard/                # Protected route — requires authentication
+app/analytics/                # Protected route — per-shortcode click analytics overview
+app/analytics/[shortCode]/    # Protected route — detailed analytics for a single shortcode
 app/sign-in/[[...sign-in]]/   # Clerk sign-in UI (catch-all, required for multi-step flow)
 app/sign-up/[[...sign-up]]/   # Clerk sign-up UI (catch-all, required for multi-step flow)
 components/ui/                # shadcn/ui components — add via `npx shadcn add <component>`
+components/time-of-day-chart.tsx  # Client component — recharts pie chart for click time distribution
 data/                         # Server-side data fetching functions (Drizzle queries)
 db/                           # Database client (drizzle.ts) and schema files
 lib/                          # Shared utilities (utils.ts, etc.)
 migrations/                   # Drizzle migration output (auto-generated, do not edit)
-docs/                         # Reference docs and guides (see below)
+.github/instructions/         # GitHub Copilot instruction files (LLM context — see below)
 proxy.ts                      # Clerk middleware (matched routes defined in config export)
 drizzle.config.ts             # Drizzle Kit config — schema at db/schema.ts, output at migrations/
 ```
@@ -63,7 +66,7 @@ Note: `NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL` / `AFTER_SIGN_UP_URL` are deprecated
   - Middleware: export a `middleware` function and a `config.matcher` from `proxy.ts`.
   - Params in dynamic routes: `params` is now a Promise — `const { slug } = await params`.
 - **Tailwind v4** — no `tailwind.config.ts`. Customize via CSS variables in `app/globals.css`. Use the `tw-animate-css` package for animations.
-- **Clerk v7** — uses `@clerk/nextjs` v7 server APIs. `auth()` is now async. Use `<Show when="signed-in">` / `<Show when="signed-out">` for conditional UI (see `app/layout.tsx`). Always pass `forceRedirectUrl="/dashboard"` to `<SignInButton>` / `<SignUpButton>` — without it Clerk redirects back to the page the button was clicked on. See [docs/auth.md](docs/auth.md) for full conventions.
+- **Clerk v7** — uses `@clerk/nextjs` v7 server APIs. `auth()` is now async. Use `<Show when="signed-in">` / `<Show when="signed-out">` for conditional UI (see `app/layout.tsx`). Always pass `forceRedirectUrl="/dashboard"` to `<SignInButton>` / `<SignUpButton>` — without it Clerk redirects back to the page the button was clicked on. See [.github/instructions/auth.instructions.md](.github/instructions/auth.instructions.md) for full conventions.
 - **Drizzle schema** — define tables in `db/schema.ts`. Run `npx drizzle-kit generate` after any schema change; never edit `migrations/` by hand.
 - **shadcn components** — install via CLI (`npx shadcn add`), not manually. Components live in `components/ui/`.
 - **Database client** — import `db` from `db/drizzle.ts`. Do not create additional Drizzle instances.
@@ -72,24 +75,27 @@ Note: `NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL` / `AFTER_SIGN_UP_URL` are deprecated
 ## Domain Rules
 
 - Short codes are 7-character alphanumeric strings (e.g. `abc1234`).
-- Redirects use HTTP 308 (Permanent Redirect) to preserve the request method.
-- Each click increments a counter in the `clicks` table.
-- Short codes must be unique; regenerate on collision.
+- Redirects use HTTP **302** (Temporary Redirect) with `Cache-Control: no-store, no-cache, must-revalidate` so browsers always hit the server on every click — this is required for accurate real-time click tracking.
+- Each redirect is recorded as a click event in the `clicks` table (fire-and-forget; does not block the redirect response).
+- Short codes must be unique; regenerate on collision (max 5 attempts).
 - The `urls` table stores `id`, `shortCode`, `originalUrl`, `userId`, and `createdAt`.
+- The `clicks` table stores `id`, `urlId` (FK → `urls.id`, cascade delete), and `createdAt` (indexed for time-series queries).
+- Analytics are available at `/analytics` (overview, all shortcodes) and `/analytics/[shortCode]` (detail: total clicks, today, this week, first/last click, avg daily, time-of-day distribution pie chart).
 
 ## Mandatory Pre-Response Loading
 
 Before responding to ANY request — planning, coding, answering questions, or reviewing code — you MUST load and read:
 
 1. This file (`AGENTS.md`) in full.
-2. **Every file inside the `docs/` folder.** Read all of them and apply whichever content is relevant to the current request.
+2. **Every file inside `.github/instructions/`.** Read all of them and apply whichever content is relevant to the current request.
 
 Do not skip this step. These files are the single source of truth for this project.
 
-## Docs Folder
+## Instructions Folder
 
-The `docs/` folder in the project root contains reference files and guides for this project. Read all files in `docs/` before responding — do not cherry-pick; load the whole folder and filter by relevance. If a `docs/` file covers a topic, defer to it rather than assuming defaults.
+All LLM instruction files live in `.github/instructions/` following the GitHub Copilot standard (YAML frontmatter with `description` and `applyTo`). Read all files in `.github/instructions/` before responding — do not cherry-pick; load the whole folder and filter by relevance.
 
-- [docs/auth.md](docs/auth.md) — Clerk v7 auth conventions: middleware route protection, sign-in/sign-up pages, conditional UI, and anti-patterns
-- [docs/ui-conventions.md](docs/ui-conventions.md) — UI rules: shadcn/ui + Tailwind CSS only, full color-token reference (light & dark), button variants, responsive patterns, and prohibited dependencies
+- [.github/instructions/auth.instructions.md](.github/instructions/auth.instructions.md) — Clerk v7 auth conventions: middleware route protection, sign-in/sign-up pages, conditional UI, and anti-patterns
+- [.github/instructions/ui-conventions.instructions.md](.github/instructions/ui-conventions.instructions.md) — UI rules: shadcn/ui + Tailwind CSS only, full color-token reference (light & dark), button variants, responsive patterns, and prohibited dependencies
 - [.github/instructions/data-fetching.instructions.md](.github/instructions/data-fetching.instructions.md) — data fetching strategy: `/data` directory convention, server-side only, Drizzle ORM, auth validation before queries, best practices
+- [.github/instructions/architecture.instructions.md](.github/instructions/architecture.instructions.md) — production MVC architecture: layer responsibilities (MODEL/REPOSITORY/SERVICE/CONTROLLER/ROUTE), uniform ApiResponse format, global error handler, serialization/deserialization conventions, and anti-patterns

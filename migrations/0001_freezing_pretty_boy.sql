@@ -1,0 +1,1 @@
+ALTER TABLE "clicks" ADD COLUMN "ip_address" varchar(45);
