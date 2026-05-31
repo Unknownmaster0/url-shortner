@@ -1,12 +1,12 @@
 ---
 name: "Generate Instruction Doc"
-description: "Generate or update a reference instruction .md file in docs/ for an architecture layer or coding standard, then update AGENTS.md to reference it."
+description: "Generate or update a GitHub Copilot .instructions.md file in .github/instructions/ for an architecture layer or coding standard, then update AGENTS.md to reference it."
 argument-hint: "Layer or standard to document (e.g. 'auth layer', 'Drizzle conventions', 'API routes')"
 agent: "Instruction Generator"
 tools: [read, edit, search]
 ---
 
-You are generating a concise, LLM-optimised reference document for this project's `docs/` directory.
+You are generating a concise, LLM-optimised instruction file for this project's `.github/instructions/` directory following the GitHub Copilot standard.
 
 ## Step 1 — Gather Input
 
@@ -18,9 +18,9 @@ Do not proceed until a topic is provided.
 ## Step 2 — Check for Existing Docs
 
 Before creating anything:
-1. List files in `docs/`.
-2. If a doc already covers this topic (fully or partially), re-scan the codebase for the current state and update the existing file to reflect what the code actually does today — do not duplicate.
-3. If no match exists, create a new file: `docs/<topic-slug>.md` (kebab-case, lowercase).
+1. List files in `.github/instructions/`.
+2. If an instruction file already covers this topic (fully or partially), re-scan the codebase for the current state and update the existing file to reflect what the code actually does today — do not duplicate.
+3. If no match exists, create a new file: `.github/instructions/<topic-slug>.instructions.md` (kebab-case, lowercase) with YAML frontmatter (`description` and `applyTo`).
 
 ## Step 3 — Explore the Codebase
 
@@ -33,7 +33,14 @@ Search the workspace for real examples relevant to the topic:
 
 Rules for the document:
 - **Target audience**: an LLM agent reading this as context — not a human tutorial.
-- **Length**: aim for 60–150 lines. If content exceeds ~150 lines, split into a primary doc and a companion `docs/<topic-slug>-advanced.md`, and link from the primary doc.
+- **Required frontmatter**: every file MUST start with YAML frontmatter:
+  ```yaml
+  ---
+  description: <one-line description of what this instruction covers>
+  applyTo: "<glob pattern, e.g. **/*.ts, **/*.tsx>"
+  ---
+  ```
+- **Length**: aim for 60–150 lines. If content exceeds ~150 lines, split into a primary doc and a companion `.github/instructions/<topic-slug>-advanced.instructions.md`, and link from the primary doc.
 - **Format**:
   - H1 title
   - One-paragraph "What & Why" summary
@@ -44,21 +51,21 @@ Rules for the document:
 
 ## Step 5 — Update AGENTS.md
 
-After saving the doc(s), add a reference line to the `## Docs Folder` section in `AGENTS.md`:
+After saving the doc(s), add a reference line to the `## Instructions Folder` section in `AGENTS.md`:
 
 ```
-- [docs/<filename>.md](docs/<filename>.md) — <one-line description>
+- [.github/instructions/<filename>.instructions.md](.github/instructions/<filename>.instructions.md) — <one-line description>
 ```
 
 If that section does not yet exist in `AGENTS.md`, append it at the end.
 
-If `AGENTS.md` does not exist, create it with an H1 heading `# AGENTS` and the `## Docs Folder` section, then add the reference line.
+If `AGENTS.md` does not exist, create it with an H1 heading `# AGENTS` and the `## Instructions Folder` section, then add the reference line.
 
 If a companion advanced doc was created, list both lines.
 
 ## Output
 
 Confirm:
-1. Which file(s) were created or updated in `docs/`.
+1. Which file(s) were created or updated in `.github/instructions/`.
 2. What was added/changed in `AGENTS.md`.
 3. Suggest the next related topic worth documenting (one sentence).

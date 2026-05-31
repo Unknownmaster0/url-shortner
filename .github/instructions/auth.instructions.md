@@ -1,3 +1,8 @@
+---
+description: Clerk v7 authentication conventions — middleware route protection, sign-in/sign-up pages, conditional UI, and anti-patterns.
+applyTo: "**/*.ts, **/*.tsx"
+---
+
 # Authentication
 
 Clerk (`@clerk/nextjs` v7) is the **only** auth method used in this project. Do not add any other auth library or custom session logic.
@@ -97,37 +102,3 @@ export default function SignUpPage() {
   return <SignUp forceRedirectUrl="/dashboard" />
 }
 ```
-
-Set the redirect URLs in `.env`:
-```
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-NEXT_PUBLIC_CLERK_SIGN_IN_FORCE_REDIRECT_URL=/dashboard
-NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL=/dashboard
-```
-
-> **Note:** `NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL` / `AFTER_SIGN_UP_URL` are **deprecated** in Clerk v7 and have no effect. Use `FORCE_REDIRECT_URL` variants instead.
-
-## Reading Auth State in Server Components
-
-`auth()` is async in Clerk v7:
-
-```ts
-import { auth } from '@clerk/nextjs/server'
-
-export default async function DashboardPage() {
-  const { userId } = await auth()
-  // userId is guaranteed non-null here because the middleware already blocked unauthenticated access
-}
-```
-
-## Anti-patterns / Pitfalls
-
-- **Do not call `auth().protect()`** instead of middleware redirects — the middleware pattern above is the convention for this project.
-- **Do not use `getAuth()`** (Clerk v5/v6 API) — it is removed in v7; use `auth()` from `@clerk/nextjs/server`.
-- **Do not add `"use client"` to pages** just to access auth state — use Server Components and `auth()`.
-- **Do not hard-code redirect paths** — use `new URL('/dashboard', req.url)` in middleware to build absolute URLs.
-- **Do not create additional auth providers** — Clerk is the sole auth method; no NextAuth, iron-session, or custom JWT.
-- **Catch-all segments required** for sign-in/sign-up pages — `[[...sign-in]]` is needed for Clerk's multi-step flow to work correctly.
-- **Do not use `fallbackRedirectUrl`** for post-auth navigation — it is overridden when a `redirect_url` query param is present (Clerk always adds one when navigating from a button). Use `forceRedirectUrl` instead.
-- **Do not use deprecated redirect env vars** — `NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL` and `NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL` are no-ops in Clerk v7. Use `NEXT_PUBLIC_CLERK_SIGN_IN_FORCE_REDIRECT_URL` and `NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL`.

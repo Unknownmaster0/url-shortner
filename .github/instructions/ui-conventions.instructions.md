@@ -1,3 +1,8 @@
+---
+description: UI conventions — shadcn/ui components, Tailwind CSS v4 color tokens, button variants, responsive design rules, and prohibited dependencies.
+applyTo: "**/*.tsx, **/*.css"
+---
+
 # UI Conventions
 
 UI is built exclusively with **shadcn/ui components** and **Tailwind CSS v4** utility classes. No additional UI libraries or icon packs may be added without explicit developer approval. Animations use `tw-animate-css` (already installed). Icons use `lucide-react` (already installed).

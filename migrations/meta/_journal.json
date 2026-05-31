@@ -8,6 +8,13 @@
       "when": 1780079767574,
       "tag": "0000_lowly_morlun",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1780212816987,
+      "tag": "0001_freezing_pretty_boy",
+      "breakpoints": true
     }
   ]
 }

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider, SignInButton, SignUpButton, Show, UserButton } from "@clerk/nextjs";
 import { shadcn } from "@clerk/ui/themes";
-import { Link2 } from "lucide-react";
+import { Link2, BarChart3 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -57,6 +57,12 @@ export default function RootLayout({
                 <Show when="signed-in">
                   <Link href="/dashboard">
                     <Button variant="ghost" size="sm">Dashboard</Button>
+                  </Link>
+                  <Link href="/analytics">
+                    <Button variant="ghost" size="sm" className="gap-1.5">
+                      <BarChart3 className="size-3.5" />
+                      Analytics
+                    </Button>
                   </Link>
                   <UserButton />
                 </Show>
