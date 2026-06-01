@@ -6,42 +6,46 @@ config({ path: ".env" });
 
 const db = drizzle(process.env.DATABASE_URL!);
 
+const userId1 = process.env.SEED_USER_ID_1!;
+const userId2 = process.env.SEED_USER_ID_2!;
+const userId3 = process.env.SEED_USER_ID_3!;
+
 const seedData = [
-  // user_3EFlRXJEEEI3vGHDLiauoP0dZEo — trysingh716@gmail.com
-  { shortCode: "abc1234", originalUrl: "https://github.com/trending",               userId: "user_3EFlRXJEEEI3vGHDLiauoP0dZEo" },
-  { shortCode: "def5678", originalUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", userId: "user_3EFlRXJEEEI3vGHDLiauoP0dZEo" },
-  { shortCode: "ghi9012", originalUrl: "https://nextjs.org/docs",                   userId: "user_3EFlRXJEEEI3vGHDLiauoP0dZEo" },
-  { shortCode: "jkl3456", originalUrl: "https://tailwindcss.com/docs",              userId: "user_3EFlRXJEEEI3vGHDLiauoP0dZEo" },
-  { shortCode: "mno7890", originalUrl: "https://orm.drizzle.team/docs/overview",    userId: "user_3EFlRXJEEEI3vGHDLiauoP0dZEo" },
-  { shortCode: "pqr1234", originalUrl: "https://vercel.com/dashboard",              userId: "user_3EFlRXJEEEI3vGHDLiauoP0dZEo" },
-  { shortCode: "stu5678", originalUrl: "https://clerk.com/docs",                    userId: "user_3EFlRXJEEEI3vGHDLiauoP0dZEo" },
-  { shortCode: "vwx9012", originalUrl: "https://neon.tech/docs",                    userId: "user_3EFlRXJEEEI3vGHDLiauoP0dZEo" },
-  { shortCode: "yza3456", originalUrl: "https://ui.shadcn.com/docs",                userId: "user_3EFlRXJEEEI3vGHDLiauoP0dZEo" },
-  { shortCode: "bcd7890", originalUrl: "https://www.typescriptlang.org/docs",       userId: "user_3EFlRXJEEEI3vGHDLiauoP0dZEo" },
+  // User 1
+  { shortCode: "abc1234", originalUrl: "https://github.com/trending",               userId: userId1 },
+  { shortCode: "def5678", originalUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", userId: userId1 },
+  { shortCode: "ghi9012", originalUrl: "https://nextjs.org/docs",                   userId: userId1 },
+  { shortCode: "jkl3456", originalUrl: "https://tailwindcss.com/docs",              userId: userId1 },
+  { shortCode: "mno7890", originalUrl: "https://orm.drizzle.team/docs/overview",    userId: userId1 },
+  { shortCode: "pqr1234", originalUrl: "https://vercel.com/dashboard",              userId: userId1 },
+  { shortCode: "stu5678", originalUrl: "https://clerk.com/docs",                    userId: userId1 },
+  { shortCode: "vwx9012", originalUrl: "https://neon.tech/docs",                    userId: userId1 },
+  { shortCode: "yza3456", originalUrl: "https://ui.shadcn.com/docs",                userId: userId1 },
+  { shortCode: "bcd7890", originalUrl: "https://www.typescriptlang.org/docs",       userId: userId1 },
 
-  // user_3ELlNiOjnhj5cqTb2gve6L26jl2 — wepot79141@matkind.com
-  { shortCode: "efg1234", originalUrl: "https://react.dev/learn",                   userId: "user_3ELlNiOjnhj5cqTb2gve6L26jl2" },
-  { shortCode: "hij5678", originalUrl: "https://developer.mozilla.org/en-US/",      userId: "user_3ELlNiOjnhj5cqTb2gve6L26jl2" },
-  { shortCode: "klm9012", originalUrl: "https://stackoverflow.com/questions",       userId: "user_3ELlNiOjnhj5cqTb2gve6L26jl2" },
-  { shortCode: "nop3456", originalUrl: "https://www.reddit.com/r/programming",      userId: "user_3ELlNiOjnhj5cqTb2gve6L26jl2" },
-  { shortCode: "qrs7890", originalUrl: "https://news.ycombinator.com",              userId: "user_3ELlNiOjnhj5cqTb2gve6L26jl2" },
-  { shortCode: "tuv1234", originalUrl: "https://www.npmjs.com",                     userId: "user_3ELlNiOjnhj5cqTb2gve6L26jl2" },
-  { shortCode: "wxy5678", originalUrl: "https://bun.sh/docs",                       userId: "user_3ELlNiOjnhj5cqTb2gve6L26jl2" },
-  { shortCode: "zab9012", originalUrl: "https://vitejs.dev/guide",                  userId: "user_3ELlNiOjnhj5cqTb2gve6L26jl2" },
-  { shortCode: "cde3456", originalUrl: "https://eslint.org/docs/latest",            userId: "user_3ELlNiOjnhj5cqTb2gve6L26jl2" },
-  { shortCode: "fgh7890", originalUrl: "https://prettier.io/docs/en",               userId: "user_3ELlNiOjnhj5cqTb2gve6L26jl2" },
+  // User 2
+  { shortCode: "efg1234", originalUrl: "https://react.dev/learn",                   userId: userId2 },
+  { shortCode: "hij5678", originalUrl: "https://developer.mozilla.org/en-US/",      userId: userId2 },
+  { shortCode: "klm9012", originalUrl: "https://stackoverflow.com/questions",       userId: userId2 },
+  { shortCode: "nop3456", originalUrl: "https://www.reddit.com/r/programming",      userId: userId2 },
+  { shortCode: "qrs7890", originalUrl: "https://news.ycombinator.com",              userId: userId2 },
+  { shortCode: "tuv1234", originalUrl: "https://www.npmjs.com",                     userId: userId2 },
+  { shortCode: "wxy5678", originalUrl: "https://bun.sh/docs",                       userId: userId2 },
+  { shortCode: "zab9012", originalUrl: "https://vitejs.dev/guide",                  userId: userId2 },
+  { shortCode: "cde3456", originalUrl: "https://eslint.org/docs/latest",            userId: userId2 },
+  { shortCode: "fgh7890", originalUrl: "https://prettier.io/docs/en",               userId: userId2 },
 
-  // user_3ELmSGUbZ6SFWN40MT2Wcc2GPud — magece1908@matkind.com
-  { shortCode: "ijk1234", originalUrl: "https://www.google.com/maps",               userId: "user_3ELmSGUbZ6SFWN40MT2Wcc2GPud" },
-  { shortCode: "lmn5678", originalUrl: "https://docs.docker.com/get-started",       userId: "user_3ELmSGUbZ6SFWN40MT2Wcc2GPud" },
-  { shortCode: "opq9012", originalUrl: "https://kubernetes.io/docs/home",           userId: "user_3ELmSGUbZ6SFWN40MT2Wcc2GPud" },
-  { shortCode: "rst3456", originalUrl: "https://aws.amazon.com/documentation",      userId: "user_3ELmSGUbZ6SFWN40MT2Wcc2GPud" },
-  { shortCode: "uvw7890", originalUrl: "https://cloud.google.com/docs",             userId: "user_3ELmSGUbZ6SFWN40MT2Wcc2GPud" },
-  { shortCode: "xyz1234", originalUrl: "https://portal.azure.com",                  userId: "user_3ELmSGUbZ6SFWN40MT2Wcc2GPud" },
-  { shortCode: "abc5678", originalUrl: "https://stripe.com/docs",                   userId: "user_3ELmSGUbZ6SFWN40MT2Wcc2GPud" },
-  { shortCode: "def9012", originalUrl: "https://supabase.com/docs",                 userId: "user_3ELmSGUbZ6SFWN40MT2Wcc2GPud" },
-  { shortCode: "ghi3456", originalUrl: "https://planetscale.com/docs",              userId: "user_3ELmSGUbZ6SFWN40MT2Wcc2GPud" },
-  { shortCode: "jkl7890", originalUrl: "https://fly.io/docs",                       userId: "user_3ELmSGUbZ6SFWN40MT2Wcc2GPud" },
+  // User 3
+  { shortCode: "ijk1234", originalUrl: "https://www.google.com/maps",               userId: userId3 },
+  { shortCode: "lmn5678", originalUrl: "https://docs.docker.com/get-started",       userId: userId3 },
+  { shortCode: "opq9012", originalUrl: "https://kubernetes.io/docs/home",           userId: userId3 },
+  { shortCode: "rst3456", originalUrl: "https://aws.amazon.com/documentation",      userId: userId3 },
+  { shortCode: "uvw7890", originalUrl: "https://cloud.google.com/docs",             userId: userId3 },
+  { shortCode: "xyz1234", originalUrl: "https://portal.azure.com",                  userId: userId3 },
+  { shortCode: "abc5678", originalUrl: "https://stripe.com/docs",                   userId: userId3 },
+  { shortCode: "def9012", originalUrl: "https://supabase.com/docs",                 userId: userId3 },
+  { shortCode: "ghi3456", originalUrl: "https://planetscale.com/docs",              userId: userId3 },
+  { shortCode: "jkl7890", originalUrl: "https://fly.io/docs",                       userId: userId3 },
 ];
 
 async function seed() {

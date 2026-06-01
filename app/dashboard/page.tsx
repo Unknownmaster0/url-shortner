@@ -5,6 +5,7 @@ import { getClickCountsByUrlIds } from '@/data/clicks'
 import { Link2, ExternalLink, Calendar, MousePointerClick, BarChart3 } from 'lucide-react'
 import { CreateLinkModal } from '@/components/create-link-modal'
 import { LinkRowActions } from '@/components/link-row-actions'
+import { ShortCodeLink } from '@/components/shortcode-link'
 import Link from 'next/link'
 
 export default async function DashboardPage() {
@@ -65,14 +66,10 @@ export default async function DashboardPage() {
                 {/* Short code */}
                 <div className="flex items-center gap-2 min-w-0">
                   <Link2 className="size-3.5 shrink-0 text-muted-foreground" />
-                  <a
-                    href={`/${link.shortCode}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <ShortCodeLink
+                    shortCode={link.shortCode}
                     className="text-sm font-mono font-medium text-foreground hover:text-primary truncate"
-                  >
-                    /{link.shortCode}
-                  </a>
+                  />
                 </div>
 
                 {/* Original URL */}

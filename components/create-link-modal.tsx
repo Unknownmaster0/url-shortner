@@ -15,13 +15,18 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import type { ApiResponse } from "@/lib/response"
+import { z } from "zod"
 
-type CreatedUrl = {
-  shortCode: string
-  originalUrl: string
-  createdAt: string | Date
-}
+const CreatedUrlSchema = z.object({
+  shortCode: z.string(),
+  originalUrl: z.string(),
+  createdAt: z.union([z.string(), z.date()]),
+})
+
+const ApiResponseSchema = z.discriminatedUnion("success", [
+  z.object({ success: z.literal(true), data: CreatedUrlSchema }),
+  z.object({ success: z.literal(false), error: z.object({ code: z.string(), message: z.string() }) }),
+])
 
 export function CreateLinkModal() {
   const router = useRouter()
@@ -54,7 +59,7 @@ export function CreateLinkModal() {
         body: JSON.stringify({ originalUrl: trimmed }),
       })
 
-      const json = (await res.json()) as ApiResponse<CreatedUrl>
+      const json = ApiResponseSchema.parse(await res.json())
 
       if (!json.success) {
         setError(json.error.message)

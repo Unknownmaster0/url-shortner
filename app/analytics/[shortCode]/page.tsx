@@ -1,6 +1,7 @@
 import { auth } from '@clerk/nextjs/server'
 import { redirect, notFound } from 'next/navigation'
 import { getClickAnalyticsForShortCode } from '@/data/clicks'
+import { ShortCodeParamSchema } from '@/lib/schemas/url.schema'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { TimeOfDayChart } from '@/components/time-of-day-chart'
 import {
@@ -23,7 +24,10 @@ export default async function AnalyticsDetailPage({
   const { userId } = await auth()
   if (!userId) redirect('/sign-in')
 
-  const { shortCode } = await params
+  const { shortCode: rawShortCode } = await params
+  const parsed = ShortCodeParamSchema.safeParse({ shortCode: rawShortCode })
+  if (!parsed.success) notFound()
+  const { shortCode } = parsed.data
 
   const analytics = await getClickAnalyticsForShortCode(shortCode, userId)
   if (!analytics) notFound()

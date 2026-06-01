@@ -2,6 +2,7 @@ import { ShortCodeParamSchema } from '@/lib/schemas/url.schema'
 import { resolveShortCode } from '@/lib/services/url.service'
 import { handleRouteError } from '@/lib/errors/handler'
 import { Errors } from '@/lib/errors/AppError'
+import { revalidatePath } from 'next/cache'
 
 // GET /[shortCode] — public redirect handler.
 //
@@ -28,6 +29,9 @@ export async function GET(
       'unknown'
 
     const originalUrl = await resolveShortCode(parsed.data.shortCode, ip)
+
+    // Revalidate dashboard so click counts update on next visit without a manual refresh.
+    revalidatePath('/dashboard')
 
     return new Response(null, {
       status: 302,
