@@ -21,19 +21,19 @@ type TimeOfDayData = {
 const chartConfig = {
   morning: {
     label: 'Morning (6am–12pm)',
-    color: 'oklch(0.65 0.15 85)',
+    color: 'var(--chart-1)',
   },
   afternoon: {
     label: 'Afternoon (12pm–5pm)',
-    color: 'oklch(0.6 0.18 250)',
+    color: 'var(--chart-2)',
   },
   evening: {
     label: 'Evening (5pm–9pm)',
-    color: 'oklch(0.55 0.2 310)',
+    color: 'var(--chart-3)',
   },
   night: {
     label: 'Night (9pm–6am)',
-    color: 'oklch(0.4 0.12 260)',
+    color: 'var(--chart-4)',
   },
 } satisfies ChartConfig
 

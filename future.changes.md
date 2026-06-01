@@ -23,7 +23,7 @@
 id:             CHG-2026-05-002
 title:          PII and user IDs hardcoded in seed.ts
 severity:       CRITICAL
-status:         open
+status:         resolved
 added:          2026-05-31
 affected-files: db/seed.ts
 description:    db/seed.ts contains hardcoded Clerk user IDs (e.g.
@@ -52,7 +52,7 @@ recommended-fix:
 id:             CHG-2026-05-001
 title:          Click count not updated in real-time after redirect
 severity:       MEDIUM
-status:         open
+status:         resolved
 added:          2026-05-31
 affected-files: app/dashboard/page.tsx, app/[shortCode]/route.ts, data/clicks.ts
 description:    After a short URL is clicked and the redirect fires, the click count
@@ -74,7 +74,7 @@ recommended-fix:
 id:             CHG-2026-05-003
 title:          Icon-only buttons missing aria-label in link-row-actions
 severity:       MEDIUM
-status:         open
+status:         resolved
 added:          2026-05-31
 affected-files: components/link-row-actions.tsx
 description:    The Copy and Delete buttons in LinkRowActions render only an icon
@@ -97,7 +97,7 @@ recommended-fix:
 id:             CHG-2026-05-004
 title:          Unsafe type assertions on fetch responses in client components
 severity:       MEDIUM
-status:         open
+status:         resolved
 added:          2026-05-31
 affected-files: components/create-link-modal.tsx, components/link-row-actions.tsx
 description:    Both client components cast the raw fetch response body using

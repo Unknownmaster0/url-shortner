@@ -28,5 +28,6 @@ export const clicks = pgTable(
   (table) => ({
     urlIdIdx: index("clicks_url_id_idx").on(table.urlId),
     createdAtIdx: index("clicks_created_at_idx").on(table.createdAt),
+    urlIdCreatedAtIdx: index("clicks_url_id_created_at_idx").on(table.urlId, table.createdAt),
   }),
 );

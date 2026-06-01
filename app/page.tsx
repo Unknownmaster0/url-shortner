@@ -128,8 +128,8 @@ export default function Home() {
               },
               {
                 icon: <Globe className="size-5 text-primary" />,
-                title: "Permanent Redirects",
-                desc: "Uses HTTP 308 redirects to preserve the request method and stay SEO-friendly.",
+                title: "Real-time Click Tracking",
+                desc: "Uses HTTP 302 (Temporary Redirect) so every click hits the server for accurate real-time analytics.",
               },
               {
                 icon: <Lock className="size-5 text-primary" />,

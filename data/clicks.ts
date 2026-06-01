@@ -95,38 +95,37 @@ export async function getClickAnalyticsForShortCode(
   const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000)
   const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
 
-  // Get aggregate stats
-  const [stats] = await db
-    .select({
-      totalClicks: count(clicks.id),
-      distinctClicks: countDistinct(clicks.ipAddress),
-      firstClickAt: min(clicks.createdAt),
-      lastClickAt: max(clicks.createdAt),
-    })
-    .from(clicks)
-    .where(eq(clicks.urlId, url.id))
-
-  // Get clicks today
-  const [todayStats] = await db
-    .select({ count: count(clicks.id) })
-    .from(clicks)
-    .where(and(eq(clicks.urlId, url.id), gte(clicks.createdAt, oneDayAgo)))
-
-  // Get clicks this week
-  const [weekStats] = await db
-    .select({ count: count(clicks.id) })
-    .from(clicks)
-    .where(and(eq(clicks.urlId, url.id), gte(clicks.createdAt, oneWeekAgo)))
-
-  // Get time-of-day distribution using EXTRACT(HOUR FROM created_at)
-  const timeOfDayRows = await db
-    .select({
-      hour: sql<number>`extract(hour from ${clicks.createdAt})`.as('hour'),
-      count: count(clicks.id),
-    })
-    .from(clicks)
-    .where(eq(clicks.urlId, url.id))
-    .groupBy(sql`extract(hour from ${clicks.createdAt})`)
+  // Run all independent aggregate queries in parallel
+  const [stats, todayStats, weekStats, timeOfDayRows] = await Promise.all([
+    db
+      .select({
+        totalClicks: count(clicks.id),
+        distinctClicks: countDistinct(clicks.ipAddress),
+        firstClickAt: min(clicks.createdAt),
+        lastClickAt: max(clicks.createdAt),
+      })
+      .from(clicks)
+      .where(eq(clicks.urlId, url.id))
+      .then((rows) => rows[0]),
+    db
+      .select({ count: count(clicks.id) })
+      .from(clicks)
+      .where(and(eq(clicks.urlId, url.id), gte(clicks.createdAt, oneDayAgo)))
+      .then((rows) => rows[0]),
+    db
+      .select({ count: count(clicks.id) })
+      .from(clicks)
+      .where(and(eq(clicks.urlId, url.id), gte(clicks.createdAt, oneWeekAgo)))
+      .then((rows) => rows[0]),
+    db
+      .select({
+        hour: sql<number>`extract(hour from ${clicks.createdAt})`.as('hour'),
+        count: count(clicks.id),
+      })
+      .from(clicks)
+      .where(eq(clicks.urlId, url.id))
+      .groupBy(sql`extract(hour from ${clicks.createdAt})`),
+  ])
 
   // Bucket hours into time-of-day segments
   const timeOfDay: TimeOfDayData = { morning: 0, afternoon: 0, evening: 0, night: 0 }
