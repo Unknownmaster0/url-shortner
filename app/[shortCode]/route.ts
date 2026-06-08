@@ -1,8 +1,8 @@
-import { ShortCodeParamSchema } from '@/lib/schemas/url.schema'
-import { resolveShortCode } from '@/lib/services/url.service'
-import { handleRouteError } from '@/lib/errors/handler'
-import { Errors } from '@/lib/errors/AppError'
-import { revalidatePath } from 'next/cache'
+import { ShortCodeParamSchema } from "@/lib/schemas/url.schema";
+import { resolveShortCode } from "@/lib/services/url.service";
+import { handleRouteError } from "@/lib/errors/handler";
+import { Errors } from "@/lib/errors/AppError";
+import { revalidatePath } from "next/cache";
 
 // GET /[shortCode] — public redirect handler.
 //
@@ -17,27 +17,30 @@ export async function GET(
 ): Promise<Response> {
   try {
     // Params are a Promise in Next.js 16 — always await.
-    const rawParams = await params
-    const parsed = ShortCodeParamSchema.safeParse(rawParams)
+    const rawParams = await params;
+    const parsed = ShortCodeParamSchema.safeParse(rawParams);
     // Malformed code → indistinguishable from "no such link" to prevent enumeration.
-    if (!parsed.success) throw Errors.notFound('Short URL')
+    if (!parsed.success) throw Errors.notFound("Short URL");
 
     // Extract client IP for distinct-click tracking
     const ip =
-      req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-      req.headers.get('x-real-ip') ||
-      'unknown'
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      req.headers.get("x-real-ip") ||
+      "unknown";
 
-    const originalUrl = await resolveShortCode(parsed.data.shortCode, ip)
+    const originalUrl = await resolveShortCode(parsed.data.shortCode, ip);
 
     // Revalidate dashboard so click counts update on next visit without a manual refresh.
-    revalidatePath('/dashboard')
+    revalidatePath("/dashboard");
 
     return new Response(null, {
       status: 302,
-      headers: { Location: originalUrl, 'Cache-Control': 'no-store, no-cache, must-revalidate' },
-    })
+      headers: {
+        Location: originalUrl,
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+      },
+    });
   } catch (err) {
-    return handleRouteError(err)
+    return handleRouteError(err);
   }
 }

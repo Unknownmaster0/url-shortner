@@ -1,27 +1,35 @@
-import { auth } from '@clerk/nextjs/server'
-import { redirect } from 'next/navigation'
-import { getClickCountsForUser } from '@/data/clicks'
-import { BarChart3, MousePointerClick, Link2, ExternalLink, Users } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import Link from 'next/link'
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
+import { getClickCountsForUser } from "@/data/clicks";
+import {
+  BarChart3,
+  MousePointerClick,
+  Link2,
+  ExternalLink,
+  Users,
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
 
 export default async function AnalyticsPage() {
-  const { userId } = await auth()
-  if (!userId) redirect('/sign-in')
+  const { userId } = await auth();
+  if (!userId) redirect("/sign-in");
 
-  const linkStats = await getClickCountsForUser(userId)
+  const linkStats = await getClickCountsForUser(userId);
 
-  const totalClicks = linkStats.reduce((sum, l) => sum + l.totalClicks, 0)
+  const totalClicks = linkStats.reduce((sum, l) => sum + l.totalClicks, 0);
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10 w-full">
       {/* Page header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground tracking-tight">Click Analytics</h1>
+        <h1 className="text-2xl font-bold text-foreground tracking-tight">
+          Click Analytics
+        </h1>
         <p className="mt-1 text-sm text-muted-foreground">
           {linkStats.length === 0
-            ? 'No links yet. Create short links from the dashboard to start tracking clicks.'
-            : `${totalClicks} total ${totalClicks === 1 ? 'click' : 'clicks'} across ${linkStats.length} ${linkStats.length === 1 ? 'link' : 'links'}`}
+            ? "No links yet. Create short links from the dashboard to start tracking clicks."
+            : `${totalClicks} total ${totalClicks === 1 ? "click" : "clicks"} across ${linkStats.length} ${linkStats.length === 1 ? "link" : "links"}`}
         </p>
       </div>
 
@@ -31,7 +39,9 @@ export default async function AnalyticsPage() {
           <div className="p-3 rounded-full bg-muted">
             <BarChart3 className="size-6 text-muted-foreground" />
           </div>
-          <p className="text-sm font-medium text-foreground">No analytics yet</p>
+          <p className="text-sm font-medium text-foreground">
+            No analytics yet
+          </p>
           <p className="text-sm text-muted-foreground max-w-xs">
             Once your short links receive clicks, analytics will appear here.
           </p>
@@ -57,15 +67,21 @@ export default async function AnalyticsPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <MousePointerClick className="size-4 text-primary" />
-                    <span className="text-2xl font-bold text-foreground">{link.totalClicks}</span>
+                    <span className="text-2xl font-bold text-foreground">
+                      {link.totalClicks}
+                    </span>
                     <span className="text-xs text-muted-foreground">
-                      {link.totalClicks === 1 ? 'click' : 'clicks'}
+                      {link.totalClicks === 1 ? "click" : "clicks"}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Users className="size-4 text-muted-foreground" />
-                    <span className="text-sm font-medium text-foreground">{link.distinctClicks}</span>
-                    <span className="text-xs text-muted-foreground">distinct</span>
+                    <span className="text-sm font-medium text-foreground">
+                      {link.distinctClicks}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      distinct
+                    </span>
                   </div>
                 </CardContent>
               </Card>
@@ -74,5 +90,5 @@ export default async function AnalyticsPage() {
         </div>
       )}
     </main>
-  )
+  );
 }

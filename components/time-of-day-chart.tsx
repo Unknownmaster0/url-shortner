@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { Pie, PieChart, Cell, Legend, Tooltip } from 'recharts'
+import { Pie, PieChart, Cell, Legend, Tooltip } from "recharts";
 import {
   ChartContainer,
   ChartTooltip,
@@ -8,44 +8,48 @@ import {
   ChartLegend,
   ChartLegendContent,
   type ChartConfig,
-} from '@/components/ui/chart'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+} from "@/components/ui/chart";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type TimeOfDayData = {
-  morning: number
-  afternoon: number
-  evening: number
-  night: number
-}
+  morning: number;
+  afternoon: number;
+  evening: number;
+  night: number;
+};
 
 const chartConfig = {
   morning: {
-    label: 'Morning (6am–12pm)',
-    color: 'var(--chart-1)',
+    label: "Morning (6am–12pm)",
+    color: "var(--chart-1)",
   },
   afternoon: {
-    label: 'Afternoon (12pm–5pm)',
-    color: 'var(--chart-2)',
+    label: "Afternoon (12pm–5pm)",
+    color: "var(--chart-2)",
   },
   evening: {
-    label: 'Evening (5pm–9pm)',
-    color: 'var(--chart-3)',
+    label: "Evening (5pm–9pm)",
+    color: "var(--chart-3)",
   },
   night: {
-    label: 'Night (9pm–6am)',
-    color: 'var(--chart-4)',
+    label: "Night (9pm–6am)",
+    color: "var(--chart-4)",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
 export function TimeOfDayChart({ data }: { data: TimeOfDayData }) {
   const chartData = [
-    { name: 'morning', value: data.morning, fill: chartConfig.morning.color },
-    { name: 'afternoon', value: data.afternoon, fill: chartConfig.afternoon.color },
-    { name: 'evening', value: data.evening, fill: chartConfig.evening.color },
-    { name: 'night', value: data.night, fill: chartConfig.night.color },
-  ].filter((d) => d.value > 0)
+    { name: "morning", value: data.morning, fill: chartConfig.morning.color },
+    {
+      name: "afternoon",
+      value: data.afternoon,
+      fill: chartConfig.afternoon.color,
+    },
+    { name: "evening", value: data.evening, fill: chartConfig.evening.color },
+    { name: "night", value: data.night, fill: chartConfig.night.color },
+  ].filter((d) => d.value > 0);
 
-  const totalClicks = data.morning + data.afternoon + data.evening + data.night
+  const totalClicks = data.morning + data.afternoon + data.evening + data.night;
 
   if (totalClicks === 0) {
     return (
@@ -54,10 +58,12 @@ export function TimeOfDayChart({ data }: { data: TimeOfDayData }) {
           <CardTitle className="text-base">Clicks by Time of Day</CardTitle>
         </CardHeader>
         <CardContent className="flex items-center justify-center py-10">
-          <p className="text-sm text-muted-foreground">No click data available yet</p>
+          <p className="text-sm text-muted-foreground">
+            No click data available yet
+          </p>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   return (
@@ -66,7 +72,10 @@ export function TimeOfDayChart({ data }: { data: TimeOfDayData }) {
         <CardTitle className="text-base">Clicks by Time of Day</CardTitle>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[300px]">
+        <ChartContainer
+          config={chartConfig}
+          className="mx-auto aspect-square max-h-[300px]"
+        >
           <PieChart>
             <ChartTooltip content={<ChartTooltipContent />} />
             <Pie
@@ -88,5 +97,5 @@ export function TimeOfDayChart({ data }: { data: TimeOfDayData }) {
         </ChartContainer>
       </CardContent>
     </Card>
-  )
+  );
 }

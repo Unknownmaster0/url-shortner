@@ -31,8 +31,8 @@ export default function Home() {
         </h1>
 
         <p className="text-base md:text-lg text-muted-foreground max-w-xl mb-10">
-          Turn long, messy links into clean 7-character short codes. Track
-          every click and manage all your links from a single dashboard.
+          Turn long, messy links into clean 7-character short codes. Track every
+          click and manage all your links from a single dashboard.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -167,9 +167,7 @@ export default function Home() {
       {/* ── How It Works ───────────────────────────────────────────────── */}
       <section className="px-4 py-24 bg-muted/30">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-3">
-            How it works
-          </h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-3">How it works</h2>
           <p className="text-muted-foreground mb-14">
             Three steps to start shortening and tracking.
           </p>

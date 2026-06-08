@@ -9,13 +9,13 @@ This project follows a strict layered MVC architecture mapped onto Next.js 16 Ap
 
 ## Layer Map
 
-| Layer | Directory | Responsibility |
-|-------|-----------|----------------|
-| **MODEL** | `db/schema.ts` | Drizzle table definitions; inferred TypeScript types only |
-| **REPOSITORY** | `data/*.ts` | Raw DB queries via Drizzle; no business logic; always auth-scoped |
-| **SERVICE** | `lib/services/*.ts` | Business logic, orchestration; calls repositories; throws `AppError` |
+| Layer          | Directory            | Responsibility                                                                 |
+| -------------- | -------------------- | ------------------------------------------------------------------------------ |
+| **MODEL**      | `db/schema.ts`       | Drizzle table definitions; inferred TypeScript types only                      |
+| **REPOSITORY** | `data/*.ts`          | Raw DB queries via Drizzle; no business logic; always auth-scoped              |
+| **SERVICE**    | `lib/services/*.ts`  | Business logic, orchestration; calls repositories; throws `AppError`           |
 | **CONTROLLER** | `app/api/*/route.ts` | Parse + validate request, call service, format `ApiResponse`; never touches DB |
-| **ROUTE** | `app/api/*/route.ts` | Next.js file-system routing — one file per resource under `app/api/` |
+| **ROUTE**      | `app/api/*/route.ts` | Next.js file-system routing — one file per resource under `app/api/`           |
 
 ## Target Directory Structure
 
@@ -59,16 +59,24 @@ Every API route MUST return this shape — no exceptions.
 
 ```typescript
 // lib/response.ts
-export type ApiSuccess<T> = { success: true; data: T }
-export type ApiError   = { success: false; error: { code: string; message: string } }
-export type ApiResponse<T> = ApiSuccess<T> | ApiError
+export type ApiSuccess<T> = { success: true; data: T };
+export type ApiError = {
+  success: false;
+  error: { code: string; message: string };
+};
+export type ApiResponse<T> = ApiSuccess<T> | ApiError;
 
 export function ok<T>(data: T, status = 200): Response {
-  return Response.json({ success: true, data } satisfies ApiSuccess<T>, { status })
+  return Response.json({ success: true, data } satisfies ApiSuccess<T>, {
+    status,
+  });
 }
 
 export function fail(code: string, message: string, status: number): Response {
-  return Response.json({ success: false, error: { code, message } } satisfies ApiError, { status })
+  return Response.json(
+    { success: false, error: { code, message } } satisfies ApiError,
+    { status },
+  );
 }
 ```
 
@@ -84,21 +92,23 @@ export class AppError extends Error {
     public readonly message: string,
     public readonly status: number,
     public readonly cause?: unknown,
-  ) { super(message) }
+  ) {
+    super(message);
+  }
 }
 
 // lib/errors/handler.ts
-import { AppError } from './AppError'
-import { fail } from '@/lib/response'
+import { AppError } from "./AppError";
+import { fail } from "@/lib/response";
 
 export function handleRouteError(err: unknown): Response {
   if (err instanceof AppError) {
     // Known, safe to surface the message
-    return fail(err.code, err.message, err.status)
+    return fail(err.code, err.message, err.status);
   }
   // Unknown error — log full context server-side, return generic message
-  console.error('[unhandled]', err)
-  return fail('INTERNAL_ERROR', 'An unexpected error occurred.', 500)
+  console.error("[unhandled]", err);
+  return fail("INTERNAL_ERROR", "An unexpected error occurred.", 500);
 }
 ```
 
@@ -110,10 +120,10 @@ Protected route handlers are wrapped in `withAuth()`. See the **Authentication v
 
 These are two distinct concerns and live in different layers.
 
-| Concern | What it answers | Where it lives |
-|---------|-----------------|----------------|
-| **Authentication** | "Who is the caller?" | `proxy.ts` middleware (primary gate) + `withAuth()` wrapper (defense-in-depth) |
-| **Authorization** | "Can this user access this resource?" | Repository layer (`data/*.ts`) — enforced via `WHERE userId = ?` |
+| Concern            | What it answers                       | Where it lives                                                                 |
+| ------------------ | ------------------------------------- | ------------------------------------------------------------------------------ |
+| **Authentication** | "Who is the caller?"                  | `proxy.ts` middleware (primary gate) + `withAuth()` wrapper (defense-in-depth) |
+| **Authorization**  | "Can this user access this resource?" | Repository layer (`data/*.ts`) — enforced via `WHERE userId = ?`               |
 
 ### Authentication — middleware first, `withAuth` second
 
@@ -125,20 +135,27 @@ These are two distinct concerns and live in different layers.
 
 ```typescript
 // app/api/urls/route.ts — the canonical controller pattern
-import { withAuth } from '@/lib/api/with-auth'
-import { ok } from '@/lib/response'
-import { Errors } from '@/lib/errors/AppError'
-import { CreateUrlSchema } from '@/lib/schemas/url.schema'
-import { createShortUrl } from '@/lib/services/url.service'
+import { withAuth } from "@/lib/api/with-auth";
+import { ok } from "@/lib/response";
+import { Errors } from "@/lib/errors/AppError";
+import { CreateUrlSchema } from "@/lib/schemas/url.schema";
+import { createShortUrl } from "@/lib/services/url.service";
 
 export const POST = withAuth(async (req, _ctx, userId) => {
-  const body = await req.json().catch(() => null)
-  const parsed = CreateUrlSchema.safeParse(body)
-  if (!parsed.success) throw Errors.validation()
+  const body = await req.json().catch(() => null);
+  const parsed = CreateUrlSchema.safeParse(body);
+  if (!parsed.success) throw Errors.validation();
 
-  const url = await createShortUrl(userId, parsed.data.originalUrl)
-  return ok({ shortCode: url.shortCode, originalUrl: url.originalUrl, createdAt: url.createdAt }, 201)
-})
+  const url = await createShortUrl(userId, parsed.data.originalUrl);
+  return ok(
+    {
+      shortCode: url.shortCode,
+      originalUrl: url.originalUrl,
+      createdAt: url.createdAt,
+    },
+    201,
+  );
+});
 ```
 
 For dynamic routes pass the context type as a generic:
@@ -155,14 +172,22 @@ Repository functions MUST receive `userId` from the caller and enforce ownership
 ```typescript
 // data/urls.ts — authorization enforced inside the query
 export async function getUrlsByUser(userId: string): Promise<UrlRow[]> {
-  return await db.select().from(urls).where(eq(urls.userId, userId)).orderBy(desc(urls.createdAt))
+  return await db
+    .select()
+    .from(urls)
+    .where(eq(urls.userId, userId))
+    .orderBy(desc(urls.createdAt));
 }
 
-export async function deleteUrlByShortCode(shortCode: string, userId: string): Promise<boolean> {
-  const result = await db.delete(urls)
+export async function deleteUrlByShortCode(
+  shortCode: string,
+  userId: string,
+): Promise<boolean> {
+  const result = await db
+    .delete(urls)
     .where(and(eq(urls.shortCode, shortCode), eq(urls.userId, userId)))
-    .returning({ id: urls.id })
-  return result.length > 0
+    .returning({ id: urls.id });
+  return result.length > 0;
 }
 ```
 

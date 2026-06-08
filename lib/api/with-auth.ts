@@ -1,6 +1,6 @@
-import { auth } from '@clerk/nextjs/server'
-import { Errors } from '@/lib/errors/AppError'
-import { handleRouteError } from '@/lib/errors/handler'
+import { auth } from "@clerk/nextjs/server";
+import { Errors } from "@/lib/errors/AppError";
+import { handleRouteError } from "@/lib/errors/handler";
 
 /**
  * Route handler that receives an authenticated userId as its final argument.
@@ -14,7 +14,7 @@ export type AuthedHandler<TCtx = unknown> = (
   req: Request,
   ctx: TCtx,
   userId: string,
-) => Promise<Response>
+) => Promise<Response>;
 
 /**
  * Higher-order route wrapper that enforces authentication BEFORE the controller runs.
@@ -32,11 +32,11 @@ export type AuthedHandler<TCtx = unknown> = (
 export function withAuth<TCtx = unknown>(handler: AuthedHandler<TCtx>) {
   return async (req: Request, ctx: TCtx): Promise<Response> => {
     try {
-      const { userId } = await auth()
-      if (!userId) throw Errors.unauthorized()
-      return await handler(req, ctx, userId)
+      const { userId } = await auth();
+      if (!userId) throw Errors.unauthorized();
+      return await handler(req, ctx, userId);
     } catch (err) {
-      return handleRouteError(err)
+      return handleRouteError(err);
     }
-  }
+  };
 }

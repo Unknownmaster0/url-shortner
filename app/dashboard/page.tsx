@@ -1,33 +1,41 @@
-import { auth } from '@clerk/nextjs/server'
-import { redirect } from 'next/navigation'
-import { getUrlsByUser } from '@/data/urls'
-import { getClickCountsByUrlIds } from '@/data/clicks'
-import { Link2, ExternalLink, Calendar, MousePointerClick, BarChart3 } from 'lucide-react'
-import { CreateLinkModal } from '@/components/create-link-modal'
-import { LinkRowActions } from '@/components/link-row-actions'
-import { ShortCodeLink } from '@/components/shortcode-link'
-import Link from 'next/link'
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
+import { getUrlsByUser } from "@/data/urls";
+import { getClickCountsByUrlIds } from "@/data/clicks";
+import {
+  Link2,
+  ExternalLink,
+  Calendar,
+  MousePointerClick,
+  BarChart3,
+} from "lucide-react";
+import { CreateLinkModal } from "@/components/create-link-modal";
+import { LinkRowActions } from "@/components/link-row-actions";
+import { ShortCodeLink } from "@/components/shortcode-link";
+import Link from "next/link";
 
 export default async function DashboardPage() {
   // Single auth() call at the page boundary.
   // Middleware is the primary guard; this is defense-in-depth + provides userId
   // to pass down to the repository (which enforces authorization via WHERE userId = ?).
-  const { userId } = await auth()
-  if (!userId) redirect('/sign-in')
+  const { userId } = await auth();
+  if (!userId) redirect("/sign-in");
 
-  const links = await getUrlsByUser(userId)
-  const clickCounts = await getClickCountsByUrlIds(links.map((l) => l.id))
+  const links = await getUrlsByUser(userId);
+  const clickCounts = await getClickCountsByUrlIds(links.map((l) => l.id));
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10 w-full">
       {/* Page header */}
       <div className="mb-8 flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground tracking-tight">Your Links</h1>
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">
+            Your Links
+          </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             {links.length === 0
-              ? 'No links yet. Create your first short link to get started.'
-              : `${links.length} shortened ${links.length === 1 ? 'link' : 'links'}`}
+              ? "No links yet. Create your first short link to get started."
+              : `${links.length} shortened ${links.length === 1 ? "link" : "links"}`}
           </p>
         </div>
         <CreateLinkModal />
@@ -41,7 +49,8 @@ export default async function DashboardPage() {
           </div>
           <p className="text-sm font-medium text-foreground">No links found</p>
           <p className="text-sm text-muted-foreground max-w-xs">
-            Links you shorten will appear here. Use the &ldquo;Create Link&rdquo; button above to shorten your first URL.
+            Links you shorten will appear here. Use the &ldquo;Create
+            Link&rdquo; button above to shorten your first URL.
           </p>
         </div>
       ) : (
@@ -49,11 +58,21 @@ export default async function DashboardPage() {
         <div className="rounded-xl border border-border bg-card overflow-hidden">
           {/* Table header */}
           <div className="hidden sm:grid sm:grid-cols-[1fr_2fr_auto_auto_auto] gap-4 px-5 py-3 border-b border-border bg-muted/40">
-            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Short link</span>
-            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Original URL</span>
-            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Clicks</span>
-            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Created</span>
-            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Actions</span>
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+              Short link
+            </span>
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+              Original URL
+            </span>
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+              Clicks
+            </span>
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+              Created
+            </span>
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+              Actions
+            </span>
           </div>
 
           {/* Rows */}
@@ -100,10 +119,10 @@ export default async function DashboardPage() {
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground whitespace-nowrap">
                   <Calendar className="size-3.5 shrink-0" />
                   <time dateTime={link.createdAt.toISOString()}>
-                    {link.createdAt.toLocaleDateString('en-US', {
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric',
+                    {link.createdAt.toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
                     })}
                   </time>
                 </div>
@@ -116,6 +135,5 @@ export default async function DashboardPage() {
         </div>
       )}
     </main>
-  )
+  );
 }
-

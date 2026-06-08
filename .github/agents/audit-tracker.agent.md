@@ -17,6 +17,7 @@ You are a senior code auditor for this Next.js URL shortener project. Your job i
 ## Project Context
 
 Before auditing, read ALL of the following files to load the authoritative rules:
+
 1. `AGENTS.md` — stack, conventions, domain rules, directory structure
 2. `.github/instructions/*.instructions.md` — all instruction files under this directory
 3. `future.changes.md` — existing backlog of issues to avoid duplicates
@@ -27,6 +28,7 @@ Every finding MUST be validated against one or more of these sources. Do not fla
 ## Audit Dimensions
 
 ### 1. Security (OWASP Top 10)
+
 - SQL/NoSQL injection: are all DB queries using Drizzle parameterised queries? No raw SQL strings with user input.
 - Broken authentication: are all protected routes guarded in `proxy.ts` middleware? Is `auth()` awaited before use?
 - Sensitive data exposure: are secrets accessed only via `process.env`? No hardcoded credentials.
@@ -34,12 +36,14 @@ Every finding MUST be validated against one or more of these sources. Do not fla
 - Security misconfiguration: are error messages returning stack traces to clients? Are HTTP methods restricted correctly?
 
 ### 2. Performance
+
 - N+1 query patterns: are related rows fetched with joins rather than per-row queries?
 - Missing DB indexes: do columns used in WHERE / ORDER BY / FK lookups have indexes in `db/schema.ts`?
 - Unnecessary Client Components: is `"use client"` added only where React hooks or event handlers are needed?
 - Unoptimised re-renders: are large data sets paginated rather than loaded entirely?
 
 ### 3. Convention Violations (AGENTS.md + all .github/instructions/)
+
 - Route handlers in wrong location (must be `app/api/*/route.ts`)
 - `getServerSideProps` usage (forbidden — use async Server Components)
 - `tailwind.config.*` usage (forbidden — Tailwind v4 uses CSS variables only)
@@ -53,12 +57,14 @@ Every finding MUST be validated against one or more of these sources. Do not fla
 - Missing `Cache-Control: no-store, no-cache, must-revalidate` on redirect responses
 
 ### 4. Missing Error Handling
+
 - API route handlers with no try/catch wrapping async operations
 - Missing validation on user-supplied input (URL format, short code format)
 - Unhandled promise rejections (fire-and-forget patterns that swallow errors silently)
 - Missing 404 / error boundary handling for dynamic routes
 
 ### 5. TypeScript / Type Safety
+
 - Use of `any` type (explicit or implicit)
 - Missing return type annotations on exported functions
 - Unsafe type assertions (`as SomeType` without validation)
@@ -66,6 +72,7 @@ Every finding MUST be validated against one or more of these sources. Do not fla
 - Schema types not shared between DB layer and API layer (type drift)
 
 ### 6. UI / UX (vs the UI conventions defined in whichever `.github/instructions/*.instructions.md` file covers UI/UX rules)
+
 - Hard-coded hex/RGB colours instead of CSS variable tokens
 - Non-shadcn UI components (e.g. raw `<button>` instead of `<Button>` from components/ui)
 - Missing `aria-label` / `aria-describedby` on interactive elements
@@ -90,6 +97,7 @@ Every finding MUST be validated against one or more of these sources. Do not fla
 ## Writing Rules for future.changes.md
 
 ### Schema (every entry MUST include all fields)
+
 ```
 id:             CHG-YYYY-MM-NNN  (YYYY-MM = current year-month, NNN = next sequential number)
 title:          Short action-oriented label (≤ 10 words)
@@ -102,18 +110,21 @@ recommended-fix: Concrete numbered steps to resolve the issue
 ```
 
 ### Severity Classification
-| Severity | Criteria |
-|----------|----------|
-| CRITICAL | Security vulnerability, data loss risk, broken auth, or causes the app to crash in production |
-| MEDIUM | UX defect, convention violation that could cause subtle bugs, missing error handling at a boundary, type unsafety that could cause runtime errors |
-| LOW | Style inconsistency, minor convention deviation, informational improvement with no functional impact |
+
+| Severity | Criteria                                                                                                                                          |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CRITICAL | Security vulnerability, data loss risk, broken auth, or causes the app to crash in production                                                     |
+| MEDIUM   | UX defect, convention violation that could cause subtle bugs, missing error handling at a boundary, type unsafety that could cause runtime errors |
+| LOW      | Style inconsistency, minor convention deviation, informational improvement with no functional impact                                              |
 
 ### Deduplication
+
 - Before adding any entry, scan the existing `## CRITICAL`, `## MEDIUM`, and `## LOW` sections.
 - If an entry with a matching `title` or `affected-files` already exists with `status: open`, **update** its `description` field to include any new information — do NOT create a duplicate.
 - If the existing entry has `status: resolved`, create a new entry (the issue has regressed).
 
 ### Placement
+
 - Append new entries under the correct severity section heading (`## CRITICAL`, `## MEDIUM`, or `## LOW`).
 - Maintain the `### CHG-YYYY-MM-NNN` heading format above each entry's code block.
 - Assign the next sequential NNN within the current month by reading the highest existing ID for that month.

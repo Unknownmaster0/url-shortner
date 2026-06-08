@@ -11,6 +11,7 @@ You are generating a concise, LLM-optimised instruction file for this project's 
 ## Step 1 — Gather Input
 
 If the user has not provided any information about the layer or coding standard to document, ask:
+
 > "What would you like to document? Examples: _auth layer (Clerk)_, _Drizzle ORM conventions_, _API route patterns_, _component structure_, _redirect logic_."
 
 Do not proceed until a topic is provided.
@@ -18,6 +19,7 @@ Do not proceed until a topic is provided.
 ## Step 2 — Check for Existing Docs
 
 Before creating anything:
+
 1. List files in `.github/instructions/`.
 2. If an instruction file already covers this topic (fully or partially), re-scan the codebase for the current state and update the existing file to reflect what the code actually does today — do not duplicate.
 3. If no match exists, create a new file: `.github/instructions/<topic-slug>.instructions.md` (kebab-case, lowercase) with YAML frontmatter (`description` and `applyTo`).
@@ -25,6 +27,7 @@ Before creating anything:
 ## Step 3 — Explore the Codebase
 
 Search the workspace for real examples relevant to the topic:
+
 - Actual file paths, function signatures, import patterns
 - Working code snippets (≤ 15 lines each) as illustration
 - Conventions already in use — do not invent patterns
@@ -32,6 +35,7 @@ Search the workspace for real examples relevant to the topic:
 ## Step 4 — Write the Document
 
 Rules for the document:
+
 - **Target audience**: an LLM agent reading this as context — not a human tutorial.
 - **Required frontmatter**: every file MUST start with YAML frontmatter:
   ```yaml
@@ -66,6 +70,7 @@ If a companion advanced doc was created, list both lines.
 ## Output
 
 Confirm:
+
 1. Which file(s) were created or updated in `.github/instructions/`.
 2. What was added/changed in `AGENTS.md`.
 3. Suggest the next related topic worth documenting (one sentence).

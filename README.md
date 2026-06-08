@@ -12,16 +12,16 @@ A production-grade URL shortener built with Next.js 16 (App Router), Clerk authe
 
 ## Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Framework | Next.js 16 (App Router) |
-| Language | TypeScript 5 |
-| Styling | Tailwind CSS v4 + shadcn/ui |
-| Icons | lucide-react |
-| Charts | shadcn chart (recharts) |
-| Auth | Clerk `@clerk/nextjs` v7 |
-| ORM | Drizzle ORM + drizzle-kit |
-| Database | Neon serverless PostgreSQL |
+| Layer     | Technology                  |
+| --------- | --------------------------- |
+| Framework | Next.js 16 (App Router)     |
+| Language  | TypeScript 5                |
+| Styling   | Tailwind CSS v4 + shadcn/ui |
+| Icons     | lucide-react                |
+| Charts    | shadcn chart (recharts)     |
+| Auth      | Clerk `@clerk/nextjs` v7    |
+| ORM       | Drizzle ORM + drizzle-kit   |
+| Database  | Neon serverless PostgreSQL  |
 
 ## Getting Started
 

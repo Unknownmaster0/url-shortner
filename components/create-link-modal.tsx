@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { PlusIcon } from "lucide-react"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { PlusIcon } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -11,75 +11,78 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { z } from "zod"
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { z } from "zod";
 
 const CreatedUrlSchema = z.object({
   shortCode: z.string(),
   originalUrl: z.string(),
   createdAt: z.union([z.string(), z.date()]),
-})
+});
 
 const ApiResponseSchema = z.discriminatedUnion("success", [
   z.object({ success: z.literal(true), data: CreatedUrlSchema }),
-  z.object({ success: z.literal(false), error: z.object({ code: z.string(), message: z.string() }) }),
-])
+  z.object({
+    success: z.literal(false),
+    error: z.object({ code: z.string(), message: z.string() }),
+  }),
+]);
 
 export function CreateLinkModal() {
-  const router = useRouter()
-  const [open, setOpen] = useState(false)
-  const [url, setUrl] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [url, setUrl] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   function reset() {
-    setUrl("")
-    setError(null)
-    setLoading(false)
+    setUrl("");
+    setError(null);
+    setLoading(false);
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setError(null)
+    e.preventDefault();
+    setError(null);
 
-    const trimmed = url.trim()
+    const trimmed = url.trim();
     if (!trimmed) {
-      setError("Please enter a URL.")
-      return
+      setError("Please enter a URL.");
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
     try {
       const res = await fetch("/api/urls", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ originalUrl: trimmed }),
-      })
+      });
 
-      const json = ApiResponseSchema.parse(await res.json())
+      const json = ApiResponseSchema.parse(await res.json());
 
       if (!json.success) {
-        setError(json.error.message)
-        return
+        setError(json.error.message);
+        return;
       }
 
       // Refresh server component data without full navigation
-      router.refresh()
-      setOpen(false)
-      reset()
+      router.refresh();
+      setOpen(false);
+      reset();
     } catch {
-      setError("Something went wrong. Please try again.")
+      setError("Something went wrong. Please try again.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   function handleOpenChange(next: boolean) {
-    if (!next) reset()
-    setOpen(next)
+    if (!next) reset();
+    setOpen(next);
   }
 
   return (
@@ -109,22 +112,16 @@ export function CreateLinkModal() {
               autoFocus
               required
             />
-            {error && (
-              <p className="text-xs text-destructive">{error}</p>
-            )}
+            {error && <p className="text-xs text-destructive">{error}</p>}
           </div>
 
           <DialogFooter>
-            <Button
-              type="submit"
-              variant="default"
-              disabled={loading}
-            >
+            <Button type="submit" variant="default" disabled={loading}>
               {loading ? "Creating…" : "Create Link"}
             </Button>
           </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

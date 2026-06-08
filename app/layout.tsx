@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { ClerkProvider, SignInButton, SignUpButton, Show, UserButton } from "@clerk/nextjs";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignUpButton,
+  Show,
+  UserButton,
+} from "@clerk/nextjs";
 import { shadcn } from "@clerk/ui/themes";
 import { Link2, BarChart3 } from "lucide-react";
 import Link from "next/link";
@@ -21,7 +27,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "URL Shortener — Shorten, Track & Share",
-  description: "Turn long URLs into clean 7-character short links. Track every click from your dashboard.",
+  description:
+    "Turn long URLs into clean 7-character short links. Track every click from your dashboard.",
 };
 
 export default function RootLayout({
@@ -36,41 +43,53 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-        <ClerkProvider appearance={{ theme: shadcn }}>
-          <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm">
-            <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-              <Link href="/" className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                <Link2 className="size-4" />
-                URL Shortener
-              </Link>
-              <div className="flex items-center gap-2">
-                <ThemeToggle />
-                <Show when="signed-out">
-                  <SignInButton forceRedirectUrl="/dashboard">
-                    <Button variant="ghost" size="sm">Sign In</Button>
-                  </SignInButton>
-                  <SignUpButton forceRedirectUrl="/dashboard">
-                    <Button size="sm">Get Started</Button>
-                  </SignUpButton>
-                </Show>
-                <Show when="signed-in">
-                  <Link href="/dashboard">
-                    <Button variant="ghost" size="sm">Dashboard</Button>
-                  </Link>
-                  <Link href="/analytics">
-                    <Button variant="ghost" size="sm" className="gap-1.5">
-                      <BarChart3 className="size-3.5" />
-                      Analytics
-                    </Button>
-                  </Link>
-                  <UserButton />
-                </Show>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ClerkProvider appearance={{ theme: shadcn }}>
+            <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm">
+              <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
+                <Link
+                  href="/"
+                  className="flex items-center gap-2 text-sm font-semibold text-foreground"
+                >
+                  <Link2 className="size-4" />
+                  URL Shortener
+                </Link>
+                <div className="flex items-center gap-2">
+                  <ThemeToggle />
+                  <Show when="signed-out">
+                    <SignInButton forceRedirectUrl="/dashboard">
+                      <Button variant="ghost" size="sm">
+                        Sign In
+                      </Button>
+                    </SignInButton>
+                    <SignUpButton forceRedirectUrl="/dashboard">
+                      <Button size="sm">Get Started</Button>
+                    </SignUpButton>
+                  </Show>
+                  <Show when="signed-in">
+                    <Link href="/dashboard">
+                      <Button variant="ghost" size="sm">
+                        Dashboard
+                      </Button>
+                    </Link>
+                    <Link href="/analytics">
+                      <Button variant="ghost" size="sm" className="gap-1.5">
+                        <BarChart3 className="size-3.5" />
+                        Analytics
+                      </Button>
+                    </Link>
+                    <UserButton />
+                  </Show>
+                </div>
               </div>
-            </div>
-          </header>
-          {children}
-        </ClerkProvider>
+            </header>
+            {children}
+          </ClerkProvider>
         </ThemeProvider>
       </body>
     </html>

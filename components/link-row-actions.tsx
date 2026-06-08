@@ -1,55 +1,61 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Copy, Check, Trash2 } from "lucide-react"
-import { z } from "zod"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Copy, Check, Trash2 } from "lucide-react";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 
 const ApiResponseSchema = z.discriminatedUnion("success", [
-  z.object({ success: z.literal(true), data: z.object({ deleted: z.boolean() }) }),
-  z.object({ success: z.literal(false), error: z.object({ code: z.string(), message: z.string() }) }),
-])
+  z.object({
+    success: z.literal(true),
+    data: z.object({ deleted: z.boolean() }),
+  }),
+  z.object({
+    success: z.literal(false),
+    error: z.object({ code: z.string(), message: z.string() }),
+  }),
+]);
 
 interface LinkRowActionsProps {
-  shortCode: string
+  shortCode: string;
 }
 
 export function LinkRowActions({ shortCode }: LinkRowActionsProps) {
-  const router = useRouter()
-  const [copied, setCopied] = useState(false)
-  const [deleting, setDeleting] = useState(false)
-  const [confirmOpen, setConfirmOpen] = useState(false)
+  const router = useRouter();
+  const [copied, setCopied] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   async function handleCopy() {
-    const shortUrl = `${window.location.origin}/${shortCode}`
-    await navigator.clipboard.writeText(shortUrl)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    const shortUrl = `${window.location.origin}/${shortCode}`;
+    await navigator.clipboard.writeText(shortUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   async function handleDelete() {
-    setDeleting(true)
+    setDeleting(true);
     try {
-      const res = await fetch(`/api/urls/${shortCode}`, { method: "DELETE" })
-      const json = ApiResponseSchema.parse(await res.json())
+      const res = await fetch(`/api/urls/${shortCode}`, { method: "DELETE" });
+      const json = ApiResponseSchema.parse(await res.json());
       if (!json.success) {
-        window.alert(json.error.message)
-        return
+        window.alert(json.error.message);
+        return;
       }
-      setConfirmOpen(false)
-      router.refresh()
+      setConfirmOpen(false);
+      router.refresh();
     } catch {
-      window.alert("Something went wrong. Please try again.")
+      window.alert("Something went wrong. Please try again.");
     } finally {
-      setDeleting(false)
+      setDeleting(false);
     }
   }
 
@@ -63,7 +69,11 @@ export function LinkRowActions({ shortCode }: LinkRowActionsProps) {
           title="Copy short link"
           aria-label="Copy short link"
         >
-          {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
+          {copied ? (
+            <Check className="size-3.5" />
+          ) : (
+            <Copy className="size-3.5" />
+          )}
         </Button>
         <Button
           variant="destructive"
@@ -82,8 +92,11 @@ export function LinkRowActions({ shortCode }: LinkRowActionsProps) {
             <DialogTitle>Delete short link</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
-            Are you sure you want to delete <span className="font-mono font-medium text-foreground">/{shortCode}</span>?
-            This action cannot be undone.
+            Are you sure you want to delete{" "}
+            <span className="font-mono font-medium text-foreground">
+              /{shortCode}
+            </span>
+            ? This action cannot be undone.
           </p>
           <DialogFooter>
             <Button
@@ -106,5 +119,5 @@ export function LinkRowActions({ shortCode }: LinkRowActionsProps) {
         </DialogContent>
       </Dialog>
     </>
-  )
+  );
 }

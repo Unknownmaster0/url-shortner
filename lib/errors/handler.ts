@@ -1,5 +1,5 @@
-import { AppError } from './AppError'
-import { fail } from '@/lib/response'
+import { AppError } from "./AppError";
+import { fail } from "@/lib/response";
 
 /**
  * Global route error handler.
@@ -20,10 +20,10 @@ import { fail } from '@/lib/response'
 export function handleRouteError(err: unknown): Response {
   if (err instanceof AppError) {
     // Known, intentional error — safe to surface the message.
-    return fail(err.code, err.message, err.status)
+    return fail(err.code, err.message, err.status);
   }
 
   // Unknown error — log full details server-side; hide internals from the client.
-  console.error('[route-error] Unhandled exception:', err)
-  return fail('INTERNAL_ERROR', 'An unexpected error occurred.', 500)
+  console.error("[route-error] Unhandled exception:", err);
+  return fail("INTERNAL_ERROR", "An unexpected error occurred.", 500);
 }

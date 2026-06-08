@@ -130,7 +130,7 @@ recommended-fix:
 id:             CHG-2026-05-005
 title:          Marketing copy states HTTP 308 but redirect uses 302
 severity:       LOW
-status:         open
+status:         resolved
 added:          2026-05-31
 affected-files: app/page.tsx
 description:    The "Permanent Redirects" feature card in the landing page reads:
@@ -179,7 +179,7 @@ recommended-fix:
 id:             CHG-2026-05-007
 title:          Missing composite index on clicks (urlId, createdAt)
 severity:       LOW
-status:         open
+status:         resolved
 added:          2026-05-31
 affected-files: db/schema.ts, migrations/
 description:    getClickAnalyticsForShortCode (data/clicks.ts) executes queries with
@@ -203,7 +203,7 @@ recommended-fix:
 id:             CHG-2026-05-008
 title:          Hardcoded OKLCH values in time-of-day-chart instead of CSS tokens
 severity:       LOW
-status:         open
+status:         resolved
 added:          2026-05-31
 affected-files: components/time-of-day-chart.tsx
 description:    The chartConfig object defines chart segment colors as literal OKLCH
@@ -229,7 +229,7 @@ recommended-fix:
 id:             CHG-2026-05-009
 title:          Raw shortCode URL param unvalidated in analytics detail page
 severity:       LOW
-status:         open
+status:         resolved
 added:          2026-05-31
 affected-files: app/analytics/[shortCode]/page.tsx
 description:    The analytics detail page destructures shortCode from the awaited
@@ -256,7 +256,7 @@ recommended-fix:
 id:             CHG-2026-05-010
 title:          Four sequential DB queries in analytics detail data function
 severity:       LOW
-status:         open
+status:         resolved
 added:          2026-05-31
 affected-files: data/clicks.ts
 description:    getClickAnalyticsForShortCode executes 4 separate awaited DB queries

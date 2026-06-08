@@ -9,12 +9,12 @@ UI is built exclusively with **shadcn/ui components** and **Tailwind CSS v4** ut
 
 ## Key Files
 
-| File | Responsibility |
-|------|---------------|
-| `app/globals.css` | All CSS custom properties (color tokens, radius, fonts) |
-| `components/ui/` | shadcn/ui components — install via CLI only |
+| File              | Responsibility                                                          |
+| ----------------- | ----------------------------------------------------------------------- |
+| `app/globals.css` | All CSS custom properties (color tokens, radius, fonts)                 |
+| `components/ui/`  | shadcn/ui components — install via CLI only                             |
 | `components.json` | shadcn config: style `base-nova`, baseColor `neutral`, CSS variables on |
-| `app/layout.tsx` | Root fonts (Geist Sans + Geist Mono), `antialiased`, flex column body |
+| `app/layout.tsx`  | Root fonts (Geist Sans + Geist Mono), `antialiased`, flex column body   |
 
 ## Color Scheme
 
@@ -22,37 +22,37 @@ Colors are defined as OKLCH CSS variables in `app/globals.css`. All Tailwind col
 
 ### Light Mode Tokens (`:root`)
 
-| Token | Value | Use |
-|-------|-------|-----|
-| `--background` | `oklch(1 0 0)` | Page background |
-| `--foreground` | `oklch(0.145 0 0)` | Body text |
-| `--primary` | `oklch(0.205 0 0)` | Primary button bg, key actions |
-| `--primary-foreground` | `oklch(0.985 0 0)` | Text on primary buttons |
-| `--secondary` | `oklch(0.97 0 0)` | Secondary button bg |
-| `--secondary-foreground` | `oklch(0.205 0 0)` | Text on secondary buttons |
-| `--muted` | `oklch(0.97 0 0)` | Subtle backgrounds, disabled states |
-| `--muted-foreground` | `oklch(0.556 0 0)` | Placeholder text, captions |
-| `--accent` | `oklch(0.97 0 0)` | Hover / focus highlight bg |
-| `--destructive` | `oklch(0.577 0.245 27.325)` | Error, delete actions (red) |
-| `--border` | `oklch(0.922 0 0)` | Default borders |
-| `--input` | `oklch(0.922 0 0)` | Input field borders |
-| `--ring` | `oklch(0.708 0 0)` | Focus rings |
-| `--card` | `oklch(1 0 0)` | Card / panel background |
-| `--card-foreground` | `oklch(0.145 0 0)` | Text inside cards |
+| Token                    | Value                       | Use                                 |
+| ------------------------ | --------------------------- | ----------------------------------- |
+| `--background`           | `oklch(1 0 0)`              | Page background                     |
+| `--foreground`           | `oklch(0.145 0 0)`          | Body text                           |
+| `--primary`              | `oklch(0.205 0 0)`          | Primary button bg, key actions      |
+| `--primary-foreground`   | `oklch(0.985 0 0)`          | Text on primary buttons             |
+| `--secondary`            | `oklch(0.97 0 0)`           | Secondary button bg                 |
+| `--secondary-foreground` | `oklch(0.205 0 0)`          | Text on secondary buttons           |
+| `--muted`                | `oklch(0.97 0 0)`           | Subtle backgrounds, disabled states |
+| `--muted-foreground`     | `oklch(0.556 0 0)`          | Placeholder text, captions          |
+| `--accent`               | `oklch(0.97 0 0)`           | Hover / focus highlight bg          |
+| `--destructive`          | `oklch(0.577 0.245 27.325)` | Error, delete actions (red)         |
+| `--border`               | `oklch(0.922 0 0)`          | Default borders                     |
+| `--input`                | `oklch(0.922 0 0)`          | Input field borders                 |
+| `--ring`                 | `oklch(0.708 0 0)`          | Focus rings                         |
+| `--card`                 | `oklch(1 0 0)`              | Card / panel background             |
+| `--card-foreground`      | `oklch(0.145 0 0)`          | Text inside cards                   |
 
 ### Dark Mode Tokens (`.dark`)
 
-| Token | Value |
-|-------|-------|
-| `--background` | `oklch(0.145 0 0)` |
-| `--foreground` | `oklch(0.985 0 0)` |
-| `--primary` | `oklch(0.922 0 0)` |
-| `--primary-foreground` | `oklch(0.205 0 0)` |
-| `--card` | `oklch(0.205 0 0)` |
-| `--muted` | `oklch(0.269 0 0)` |
-| `--border` | `oklch(1 0 0 / 10%)` |
-| `--input` | `oklch(1 0 0 / 15%)` |
-| `--destructive` | `oklch(0.704 0.191 22.216)` |
+| Token                  | Value                       |
+| ---------------------- | --------------------------- |
+| `--background`         | `oklch(0.145 0 0)`          |
+| `--foreground`         | `oklch(0.985 0 0)`          |
+| `--primary`            | `oklch(0.922 0 0)`          |
+| `--primary-foreground` | `oklch(0.205 0 0)`          |
+| `--card`               | `oklch(0.205 0 0)`          |
+| `--muted`              | `oklch(0.269 0 0)`          |
+| `--border`             | `oklch(1 0 0 / 10%)`        |
+| `--input`              | `oklch(1 0 0 / 15%)`        |
+| `--destructive`        | `oklch(0.704 0.191 22.216)` |
 
 > Dark mode is activated by adding the `.dark` class to the `<html>` element. Use `next-themes` or a manual toggle — do not hardcode `dark:` classes for colors that are already covered by the token system.
 
@@ -76,14 +76,14 @@ To change brand colors, only edit the CSS variable values in `app/globals.css` �
 
 From `components/ui/button.tsx` (do not edit variant logic without a clear reason):
 
-| Variant | Use case |
-|---------|----------|
-| `default` | Primary actions — uses `bg-primary text-primary-foreground` |
-| `secondary` | Secondary actions — uses `bg-secondary` |
-| `outline` | Bordered, transparent bg |
-| `ghost` | Minimal, hover-only bg |
+| Variant       | Use case                                                            |
+| ------------- | ------------------------------------------------------------------- |
+| `default`     | Primary actions — uses `bg-primary text-primary-foreground`         |
+| `secondary`   | Secondary actions — uses `bg-secondary`                             |
+| `outline`     | Bordered, transparent bg                                            |
+| `ghost`       | Minimal, hover-only bg                                              |
 | `destructive` | Delete / danger actions — uses `bg-destructive/10 text-destructive` |
-| `link` | Inline text links |
+| `link`        | Inline text links                                                   |
 
 Sizes: `xs`, `sm`, `default`, `lg`, `icon`, `icon-xs`, `icon-sm`, `icon-lg`.
 
@@ -102,20 +102,24 @@ Sizes: `xs`, `sm`, `default`, `lg`, `icon`, `icon-xs`, `icon-sm`, `icon-lg`.
 - **Stack on mobile, side-by-side on desktop** — use `flex flex-col sm:flex-row` or `grid grid-cols-1 md:grid-cols-2`.
 
 ```tsx
-{/* Responsive card grid example */}
+{
+  /* Responsive card grid example */
+}
 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-  {urls.map(url => <UrlCard key={url.id} {...url} />)}
-</div>
+  {urls.map((url) => (
+    <UrlCard key={url.id} {...url} />
+  ))}
+</div>;
 ```
 
 ## Typography
 
-| Class | Use |
-|-------|-----|
-| `font-sans` | Default body (`--font-geist-sans`) |
-| `font-mono` | Code, short codes (`--font-geist-mono`) |
-| `text-foreground` | Primary text |
-| `text-muted-foreground` | Secondary/caption text |
+| Class                   | Use                                     |
+| ----------------------- | --------------------------------------- |
+| `font-sans`             | Default body (`--font-geist-sans`)      |
+| `font-mono`             | Code, short codes (`--font-geist-mono`) |
+| `text-foreground`       | Primary text                            |
+| `text-muted-foreground` | Secondary/caption text                  |
 
 ## Adding New shadcn Components
 

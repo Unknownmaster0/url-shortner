@@ -1,9 +1,9 @@
-import { auth } from '@clerk/nextjs/server'
-import { redirect, notFound } from 'next/navigation'
-import { getClickAnalyticsForShortCode } from '@/data/clicks'
-import { ShortCodeParamSchema } from '@/lib/schemas/url.schema'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { TimeOfDayChart } from '@/components/time-of-day-chart'
+import { auth } from "@clerk/nextjs/server";
+import { redirect, notFound } from "next/navigation";
+import { getClickAnalyticsForShortCode } from "@/data/clicks";
+import { ShortCodeParamSchema } from "@/lib/schemas/url.schema";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { TimeOfDayChart } from "@/components/time-of-day-chart";
 import {
   ArrowLeft,
   MousePointerClick,
@@ -13,24 +13,24 @@ import {
   ExternalLink,
   Link2,
   Users,
-} from 'lucide-react'
-import Link from 'next/link'
+} from "lucide-react";
+import Link from "next/link";
 
 export default async function AnalyticsDetailPage({
   params,
 }: {
-  params: Promise<{ shortCode: string }>
+  params: Promise<{ shortCode: string }>;
 }) {
-  const { userId } = await auth()
-  if (!userId) redirect('/sign-in')
+  const { userId } = await auth();
+  if (!userId) redirect("/sign-in");
 
-  const { shortCode: rawShortCode } = await params
-  const parsed = ShortCodeParamSchema.safeParse({ shortCode: rawShortCode })
-  if (!parsed.success) notFound()
-  const { shortCode } = parsed.data
+  const { shortCode: rawShortCode } = await params;
+  const parsed = ShortCodeParamSchema.safeParse({ shortCode: rawShortCode });
+  if (!parsed.success) notFound();
+  const { shortCode } = parsed.data;
 
-  const analytics = await getClickAnalyticsForShortCode(shortCode, userId)
-  if (!analytics) notFound()
+  const analytics = await getClickAnalyticsForShortCode(shortCode, userId);
+  if (!analytics) notFound();
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10 w-full">
@@ -75,7 +75,9 @@ export default async function AnalyticsDetailPage({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-foreground">{analytics.totalClicks}</p>
+            <p className="text-3xl font-bold text-foreground">
+              {analytics.totalClicks}
+            </p>
           </CardContent>
         </Card>
 
@@ -87,7 +89,9 @@ export default async function AnalyticsDetailPage({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-foreground">{analytics.distinctClicks}</p>
+            <p className="text-3xl font-bold text-foreground">
+              {analytics.distinctClicks}
+            </p>
           </CardContent>
         </Card>
 
@@ -99,7 +103,9 @@ export default async function AnalyticsDetailPage({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-foreground">{analytics.clicksToday}</p>
+            <p className="text-3xl font-bold text-foreground">
+              {analytics.clicksToday}
+            </p>
           </CardContent>
         </Card>
 
@@ -111,7 +117,9 @@ export default async function AnalyticsDetailPage({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-foreground">{analytics.clicksThisWeek}</p>
+            <p className="text-3xl font-bold text-foreground">
+              {analytics.clicksThisWeek}
+            </p>
           </CardContent>
         </Card>
 
@@ -123,7 +131,9 @@ export default async function AnalyticsDetailPage({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-foreground">{analytics.avgDailyClicks}</p>
+            <p className="text-3xl font-bold text-foreground">
+              {analytics.avgDailyClicks}
+            </p>
           </CardContent>
         </Card>
 
@@ -137,12 +147,12 @@ export default async function AnalyticsDetailPage({
           <CardContent>
             <p className="text-lg font-semibold text-foreground">
               {analytics.firstClickAt
-                ? analytics.firstClickAt.toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric',
+                ? analytics.firstClickAt.toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
                   })
-                : '—'}
+                : "—"}
             </p>
           </CardContent>
         </Card>
@@ -157,12 +167,12 @@ export default async function AnalyticsDetailPage({
           <CardContent>
             <p className="text-lg font-semibold text-foreground">
               {analytics.lastClickAt
-                ? analytics.lastClickAt.toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric',
+                ? analytics.lastClickAt.toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
                   })
-                : '—'}
+                : "—"}
             </p>
           </CardContent>
         </Card>
@@ -173,5 +183,5 @@ export default async function AnalyticsDetailPage({
         <TimeOfDayChart data={analytics.timeOfDay} />
       </div>
     </main>
-  )
+  );
 }

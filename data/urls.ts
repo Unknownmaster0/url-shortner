@@ -1,9 +1,9 @@
-import { db } from '@/db/drizzle'
-import { urls } from '@/db/schema'
-import { eq, desc, and } from 'drizzle-orm'
+import { db } from "@/db/drizzle";
+import { urls } from "@/db/schema";
+import { eq, desc, and } from "drizzle-orm";
 
-export type UrlRow = typeof urls.$inferSelect
-export type NewUrlRow = typeof urls.$inferInsert
+export type UrlRow = typeof urls.$inferSelect;
+export type NewUrlRow = typeof urls.$inferInsert;
 
 // ──────────────────────────────────────────────────────────────────────────────
 // REPOSITORY LAYER
@@ -24,7 +24,7 @@ export async function getUrlsByUser(userId: string): Promise<UrlRow[]> {
     .select()
     .from(urls)
     .where(eq(urls.userId, userId))
-    .orderBy(desc(urls.createdAt))
+    .orderBy(desc(urls.createdAt));
 }
 
 /**
@@ -32,13 +32,15 @@ export async function getUrlsByUser(userId: string): Promise<UrlRow[]> {
  * route — no authorization check because short codes are themselves the access token.
  * Returns undefined when not found (caller decides the error semantics).
  */
-export async function findUrlByShortCode(shortCode: string): Promise<UrlRow | undefined> {
+export async function findUrlByShortCode(
+  shortCode: string,
+): Promise<UrlRow | undefined> {
   const [row] = await db
     .select()
     .from(urls)
     .where(eq(urls.shortCode, shortCode))
-    .limit(1)
-  return row
+    .limit(1);
+  return row;
 }
 
 /**
@@ -46,8 +48,8 @@ export async function findUrlByShortCode(shortCode: string): Promise<UrlRow | un
  * already been authenticated upstream; ownership is recorded via the userId column.
  */
 export async function insertUrl(data: NewUrlRow): Promise<UrlRow> {
-  const [row] = await db.insert(urls).values(data).returning()
-  return row
+  const [row] = await db.insert(urls).values(data).returning();
+  return row;
 }
 
 /**
@@ -63,8 +65,6 @@ export async function deleteUrlByShortCode(
   const result = await db
     .delete(urls)
     .where(and(eq(urls.shortCode, shortCode), eq(urls.userId, userId)))
-    .returning({ id: urls.id })
-  return result.length > 0
+    .returning({ id: urls.id });
+  return result.length > 0;
 }
-
-

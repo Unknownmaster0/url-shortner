@@ -2,6 +2,7 @@
 description: Data fetching strategy for the project — modular pattern, server-side only, Drizzle ORM, and best practices for efficient and maintainable data retrieval.
 applyTo: "**/*.ts, **/*.tsx"
 ---
+
 # Data Fetching Strategy
 
 Data fetching in this project is designed to be efficient, maintainable, and scalable. We follow a modular approach where data fetching logic is separated from the UI components. This allows for better code organization and easier testing.
@@ -18,26 +19,26 @@ ALWAYS create a separate file for data fetching logic in the `/data` directory a
 
 ```ts
 // ✅ Correct
-import { db } from '@/db/drizzle'
+import { db } from "@/db/drizzle";
 
 // ❌ Wrong — never instantiate a new client
-import { drizzle } from 'drizzle-orm/neon-http'
-const db = drizzle(process.env.DATABASE_URL!)
+import { drizzle } from "drizzle-orm/neon-http";
+const db = drizzle(process.env.DATABASE_URL!);
 ```
 
 **Validate auth before querying** — For any data scoped to a user, ALWAYS call `auth()` from `@clerk/nextjs/server` and validate `userId` before executing a database query. Never query user-scoped data without confirming the caller's identity.
 
 ```ts
-import { auth } from '@clerk/nextjs/server'
-import { db } from '@/db/drizzle'
-import { urls } from '@/db/schema'
-import { eq } from 'drizzle-orm'
+import { auth } from "@clerk/nextjs/server";
+import { db } from "@/db/drizzle";
+import { urls } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 export async function getUrlsByUser() {
-  const { userId } = await auth()
-  if (!userId) return []
+  const { userId } = await auth();
+  if (!userId) return [];
 
-  return await db.select().from(urls).where(eq(urls.userId, userId))
+  return await db.select().from(urls).where(eq(urls.userId, userId));
 }
 ```
 

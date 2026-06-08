@@ -16,8 +16,8 @@ export class AppError extends Error {
     /** Optional original cause for server-side logging — never exposed to the client. */
     public readonly cause?: unknown,
   ) {
-    super(message)
-    this.name = 'AppError'
+    super(message);
+    this.name = "AppError";
   }
 }
 
@@ -25,17 +25,21 @@ export class AppError extends Error {
 
 export const Errors = {
   unauthorized: () =>
-    new AppError('UNAUTHORIZED', 'Authentication required.', 401),
+    new AppError("UNAUTHORIZED", "Authentication required.", 401),
 
   forbidden: () =>
-    new AppError('FORBIDDEN', 'You do not have permission to perform this action.', 403),
+    new AppError(
+      "FORBIDDEN",
+      "You do not have permission to perform this action.",
+      403,
+    ),
 
-  notFound: (resource = 'Resource') =>
-    new AppError('NOT_FOUND', `${resource} not found.`, 404),
+  notFound: (resource = "Resource") =>
+    new AppError("NOT_FOUND", `${resource} not found.`, 404),
 
-  validation: (message = 'Invalid request body.') =>
-    new AppError('VALIDATION_ERROR', message, 400),
+  validation: (message = "Invalid request body.") =>
+    new AppError("VALIDATION_ERROR", message, 400),
 
-  conflict: (message = 'Resource already exists.') =>
-    new AppError('CONFLICT', message, 409),
-} as const
+  conflict: (message = "Resource already exists.") =>
+    new AppError("CONFLICT", message, 409),
+} as const;

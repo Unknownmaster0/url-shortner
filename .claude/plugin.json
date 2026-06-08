@@ -1,0 +1,12 @@
+{
+  "name": "url-shortner-plugin",
+  "version": "1.0.0",
+  "description": "URL Shortener Development Plugin",
+  "hooksPath": "../.github/hooks",
+  "hooks": [
+    {
+      "id": "format-hook",
+      "path": "format.json"
+    }
+  ]
+}

@@ -2,16 +2,16 @@
 
 ## Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Framework | Next.js 16 (App Router) — **breaking changes from older versions** |
-| Language | TypeScript 5 |
-| Styling | Tailwind CSS v4 (PostCSS plugin, no `tailwind.config.*`) |
-| UI Components | shadcn/ui via `components/ui/`, base-ui (`@base-ui/react`) |
-| Icons | lucide-react |
-| Auth | Clerk (`@clerk/nextjs` v7) |
-| ORM | Drizzle ORM + drizzle-kit |
-| Database | Neon serverless PostgreSQL (`@neondatabase/serverless`) |
+| Layer         | Technology                                                         |
+| ------------- | ------------------------------------------------------------------ |
+| Framework     | Next.js 16 (App Router) — **breaking changes from older versions** |
+| Language      | TypeScript 5                                                       |
+| Styling       | Tailwind CSS v4 (PostCSS plugin, no `tailwind.config.*`)           |
+| UI Components | shadcn/ui via `components/ui/`, base-ui (`@base-ui/react`)         |
+| Icons         | lucide-react                                                       |
+| Auth          | Clerk (`@clerk/nextjs` v7)                                         |
+| ORM           | Drizzle ORM + drizzle-kit                                          |
+| Database      | Neon serverless PostgreSQL (`@neondatabase/serverless`)            |
 
 ## Project Structure
 
@@ -45,6 +45,7 @@ npx drizzle-kit studio     # Open Drizzle Studio (DB GUI)
 ```
 
 Environment: copy `.env.example` to `.env` and fill in the following variables:
+
 ```
 DATABASE_URL=              # Neon connection string
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
@@ -54,6 +55,7 @@ NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
 NEXT_PUBLIC_CLERK_SIGN_IN_FORCE_REDIRECT_URL=/dashboard
 NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL=/dashboard
 ```
+
 Note: `NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL` / `AFTER_SIGN_UP_URL` are deprecated in Clerk v7 — use the `FORCE_REDIRECT_URL` variants above.
 
 ## Conventions

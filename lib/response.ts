@@ -1,9 +1,12 @@
 // Uniform API response types and factory functions.
 // Every API route MUST use ok() or fail() — never return raw Response.json() directly.
 
-export type ApiSuccess<T> = { success: true; data: T }
-export type ApiError = { success: false; error: { code: string; message: string } }
-export type ApiResponse<T> = ApiSuccess<T> | ApiError
+export type ApiSuccess<T> = { success: true; data: T };
+export type ApiError = {
+  success: false;
+  error: { code: string; message: string };
+};
+export type ApiResponse<T> = ApiSuccess<T> | ApiError;
 
 /**
  * Return a successful JSON response.
@@ -11,7 +14,9 @@ export type ApiResponse<T> = ApiSuccess<T> | ApiError
  * @param status - HTTP status code (default 200).
  */
 export function ok<T>(data: T, status = 200): Response {
-  return Response.json({ success: true, data } satisfies ApiSuccess<T>, { status })
+  return Response.json({ success: true, data } satisfies ApiSuccess<T>, {
+    status,
+  });
 }
 
 /**
@@ -22,5 +27,5 @@ export function fail(code: string, message: string, status: number): Response {
   return Response.json(
     { success: false, error: { code, message } } satisfies ApiError,
     { status },
-  )
+  );
 }
